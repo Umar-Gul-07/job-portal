@@ -6,6 +6,7 @@ import WhyChooseUs from "./include/Why-Choose-Should-Us";
 import Blog from "./Blog";
 import Pricing from "./Pricing";
 import ContactPage from "./Contact";
+import AboutUs from "./About";
 
 function Home() {
     return (
@@ -69,10 +70,14 @@ function Home() {
             <WhyChooseUs/>
             <Blog/>
             <div id="pricing">
-            <Pricing/>
+                <Pricing/>
+            </div>
+
+            <div id="about-us">
+                <AboutUs/>
             </div>
             <div id="contact-us">
-            <ContactPage/>
+                <ContactPage/>
             </div>
         </>
     )
