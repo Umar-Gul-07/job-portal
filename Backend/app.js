@@ -46,7 +46,6 @@ app.use((err, req, res, next) => {
 
 // Routes
 app.use('/user', user);
-app.use('/lawyer', lawyer);
 app.use('/payments', payment);
 app.use('/auth', authentication);
 app.use('/rating', Rating);
