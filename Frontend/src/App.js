@@ -3,11 +3,11 @@ import PageNotFound404 from "./Errors/PageNotFound404";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Base from "./Pages/Base";
 import Home from "./Pages/Home";
-import ContactPage from "./Pages/Contact";
-import Pricing from "./Pages/Pricing";
-import Blog from "./Pages/Blog";
+import LoginChoice from "./Pages/LoginChoice";
 import Login from "./Pages/Login";
-import UserRegistrationForm from "./Pages/UserRegistration";
+import UserRegistrationForm from "./Pages/users/UserRegistration";
+// import UserChat from "./Pages/users/UserChat";
+
 
 
 function App() {
@@ -23,8 +23,12 @@ function App() {
 
           {/* Web Routes */}
           <Route path='/' element={<Base><Home/></Base>} />
-          <Route path='/login' element={<Login/>} />
+          <Route path='/login-choice' element={<LoginChoice/>} />
+          <Route path='/login' element={<Login />} />
+
+          {/* User Routes */}
           <Route path='/user-registration' element={<UserRegistrationForm/>} />
+          {/*<Route path='/user-chat' element={<UserChat/>} />*/}
 
           <Route path='*' element={<PageNotFound404 />} />
 

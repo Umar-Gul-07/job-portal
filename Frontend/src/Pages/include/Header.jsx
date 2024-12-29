@@ -37,8 +37,8 @@ function Header() {
                 </ScrollLink>
             </div>
 
-            {/* Login Button */}
-            <Link to="/login">
+            {/* LoginChoice Button */}
+            <Link to="/login-choice">
                 <button className="bg-[#2B7A0B] text-white px-6 py-2 rounded-md hover:bg-[#236508] transition-colors">
                     Login
                 </button>

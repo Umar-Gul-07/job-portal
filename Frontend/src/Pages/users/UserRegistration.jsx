@@ -21,7 +21,7 @@ export default function UserRegistrationForm() {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-8 bg-white rounded-xl">
+    <div className=" mx-auto p-8 bg-white rounded-xl" style={{width:"70%"}}>
       <h1 className="text-2xl font-semibold text-center mb-8">Register as User</h1>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-3">
