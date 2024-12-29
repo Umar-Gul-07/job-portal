@@ -19,7 +19,7 @@ export default function WhyChooseUs() {
   ]
 
   return (
-    <section className="py-16 bg-[#F8F9FE]">
+    <section className="py-16 bg-[#F8F9FE] mx-auto" style={{width:"87%"}}>
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold mb-12 text-center md:text-left">
           Why You Should Choose Us

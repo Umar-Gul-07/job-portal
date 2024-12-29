@@ -77,6 +77,7 @@ function Home() {
                 <AboutUs/>
             </div>
             <div id="contact-us">
+            <div className="bg-gray-300 h-[2px] w-full" style={{marginTop:"130px"}}></div>
                 <ContactPage/>
             </div>
         </>

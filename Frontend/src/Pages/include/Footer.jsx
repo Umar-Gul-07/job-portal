@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer style={{backgroundColor:"#012603"}} className="text-white py-8">
+    <footer style={{backgroundColor:"#005502"}} className="text-white py-8">
       <div className="container mx-auto flex justify-between items-start">
         {/* Left Section */}
         <div className="flex items-start">

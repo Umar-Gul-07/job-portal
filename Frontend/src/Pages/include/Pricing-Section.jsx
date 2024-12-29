@@ -19,7 +19,7 @@ const schoolFeatures = [
 
 export default function PricingSection() {
   return (
-    <section id="pricing" className="py-16 px-4 bg-black min-h-screen">
+    <section id="pricing" className="py-16 px-4 min-h-screen" style={{backgroundColor:"#005502"}}>
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-white mb-8">Pricing</h1>
 
