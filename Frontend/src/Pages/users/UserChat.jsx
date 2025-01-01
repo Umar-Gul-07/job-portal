@@ -1,16 +1,17 @@
 import { useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
+import { Button } from "../../components/ui/button"
+import { Card } from "../../components/ui/card"
+import { Input } from "../../components/ui/input"
+import { ScrollArea } from "../../components/ui/scroll-area"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "../../components/ui/dropdown-menu"
 import { Smile, Paperclip, Image, Send, Check, ChevronDown, Search } from 'lucide-react'
+import Header from "./Header";
 
 const UserChat = () => {
     const [message, setMessage] = useState("")
@@ -120,20 +121,7 @@ const UserChat = () => {
   return (
     <div className="flex h-screen flex-col">
       {/* Navigation */}
-      <header className="flex items-center justify-between border-b bg-[#ECF0FA] px-6 py-4">
-        <Avatar className="h-11 w-11">
-          <AvatarImage src="/aceholder.svg" />
-          <AvatarFallback>Logo</AvatarFallback>
-        </Avatar>
-        <nav className="absolute left-1/2 flex -translate-x-1/2 space-x-8">
-          <Button variant="ghost">Home</Button>
-          <Button variant="ghost">Jobs</Button>
-          <Button variant="ghost">Profile</Button>
-          <Button variant="ghost">Settings</Button>
-        </nav>
-        <Button variant="ghost">Log-Out →</Button>
-      </header>
-
+      <Header/>
       <div className="flex flex-1 overflow-hidden pt-4">
         {/* Sidebar */}
         <aside className="w-[360px] bg-[#EDF2FA] p-2">

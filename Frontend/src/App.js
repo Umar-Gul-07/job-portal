@@ -6,7 +6,8 @@ import Home from "./Pages/Home";
 import LoginChoice from "./Pages/LoginChoice";
 import Login from "./Pages/Login";
 import UserRegistrationForm from "./Pages/users/UserRegistration";
-// import UserChat from "./Pages/users/UserChat";
+import UserChat from "./Pages/users/UserChat";
+import JobListing from "./Pages/users/JobListing";
 
 
 
@@ -28,7 +29,8 @@ function App() {
 
           {/* User Routes */}
           <Route path='/user-registration' element={<UserRegistrationForm/>} />
-          {/*<Route path='/user-chat' element={<UserChat/>} />*/}
+          <Route path='/user-chat' element={<UserChat/>} />
+          <Route path='/job-listing' element={<JobListing/>} />
 
           <Route path='*' element={<PageNotFound404 />} />
 
