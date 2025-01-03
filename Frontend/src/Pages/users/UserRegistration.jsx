@@ -1,11 +1,14 @@
 "use client"
 
 import React, {useState} from 'react'
-import axios from 'axios'; // Import Axios
 import {User, Mail, Phone, Lock, Eye, EyeOff, ChevronDown} from 'lucide-react'
 import {Helmet} from "react-helmet";
+import api from "../../Utils/Axios";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
 export default function UserRegistrationForm() {
+    const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false)
     const [showVerifyPassword, setShowVerifyPassword] = useState(false)
     const [backgroundChecks, setBackgroundChecks] = useState({
@@ -29,6 +32,8 @@ export default function UserRegistrationForm() {
         organization: ''
     });
 
+    const [errorMessage, setErrorMessage] = useState(''); // State for error messages
+
     const handleCheckboxChange = (check) => {
         setBackgroundChecks(prev => ({
             ...prev,
@@ -45,19 +50,28 @@ export default function UserRegistrationForm() {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission
-
+        e.preventDefault();
         try {
-            const response = await axios.post('YOUR_BACKEND_API_URL', {
+            const response = await api.post('/user/register', {
                 ...formData,
                 backgroundChecks
             });
-            console.log('User  registered successfully:', response.data);
-            // Handle success (e.g., show a success message, redirect, etc.)
+            toast.success("User Registered SuccessFully")
+            navigate("/login")
+            setErrorMessage('');
+
         } catch (error) {
             console.error('Error registering user:', error);
-            // Handle error (e.g., show an error message)
+
+            if (error.response && error.response.data && error.response.data.errors) {
+                const backendError = error.response.data.errors[0].msg;
+
+                setErrorMessage(backendError);
+            } else {
+                setErrorMessage(error.message);
+            }
         }
+
     }
 
     return (
@@ -65,6 +79,11 @@ export default function UserRegistrationForm() {
             <Helmet><title>User Registration</title></Helmet>
             <div className="mx-auto p-8 bg-white rounded-xl" style={{width: "70%"}}>
                 <h1 className="text-2xl font-semibold text-center mb-8">Register as User</h1>
+                {errorMessage && (
+                    <div className="mb-4 p-3 text-white bg-red-500 rounded-md">
+                        {errorMessage}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-4 gap-y-3">
                     {/* First Name */}
@@ -146,6 +165,8 @@ export default function UserRegistrationForm() {
                                 required
                             >
                                 <option value="">Select country</option>
+                                <option value="pakistan">Pakistan</option>
+                                <option value="afghanistan">Afganistan</option>
                             </select>
                             <ChevronDown
                                 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"/>
@@ -164,6 +185,9 @@ export default function UserRegistrationForm() {
                                 required
                             >
                                 <option value="">Choose area</option>
+                                <option value="malakand">Malakand</option>
+                                <option value="kurramagency">Kurram Agency</option>
+                                <option value="gilgit">Gilgit</option>
                             </select>
                             <ChevronDown
                                 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"/>
@@ -247,7 +271,8 @@ export default function UserRegistrationForm() {
                                 onChange={handleChange}
                                 className="w-full px-4 py-2 bg-[#F5F5F5] rounded-md focus:outline-none appearance-none"
                             >
-                                <option value="">please choose</option>
+                                <option value="">choose</option>
+                                <option value="zaalasociety">Zaala Society</option>
                             </select>
                             <ChevronDown
                                 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"/>
@@ -315,15 +340,16 @@ export default function UserRegistrationForm() {
                             />
                         </div>
                     </div>
-                </form>
 
-                {/* Sign Up Button */}
-                <div className="flex justify-center mt-8">
-                    <button type="submit" style={{backgroundColor: "#236508"}}
-                            className="px-16 py-2.5 bg-[#2B 7A0B] text-white rounded-md hover:bg-[#236508] transition-colors">
-                        Sign Up
-                    </button>
-                </div>
+                    {/* Sign Up Button */}
+                    <div className=" mt-8">
+                        <button type="submit" style={{backgroundColor: "#236508"}}
+                                className="px-16 py-2.5 bg-[#2B 7A0B] text-white rounded-md hover:bg-[#236508] transition-colors">
+                            Sign Up
+                        </button>
+                    </div>
+
+                </form>
             </div>
         </>
 

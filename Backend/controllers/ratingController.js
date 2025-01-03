@@ -1,6 +1,6 @@
 import Rating from "../models/ratingModel.js";
  import createError from "../utils/error.js";
-import lawyerModel from "../models/lawyerModel.js";
+// import lawyerModel from "../models/lawyerModel.js";
 
 class RatingController {
   static createRating = async (req, res, next) => {

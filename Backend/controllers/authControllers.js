@@ -1,78 +1,55 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"
 import userModel from "../models/userModel.js";
-import lawyerModel from "../models/lawyerModel.js";
-import createError from "../utils/error.js";
-
-// Login function with JWT
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  try {
-    console.log("Login attempt for email:", email);
-    
-    // Check for Lawyer
-    const foundLawyer = await lawyerModel.findOne({ email });
-    if (foundLawyer) {
-      const passwordMatch = await bcrypt.compare(password, foundLawyer.password);
-      console.log("Password match result:", passwordMatch);
+    try {
+        const existingUser = await userModel.findOne({ email });
 
-      if (passwordMatch && foundLawyer.isLawyer) {
-        // Generate JWT token
-        const token = jwt.sign(
-          { id: foundLawyer._id, role: "lawyer" }, // Payload
-          process.env.JWT_SECRET, // Secret key from .env file
-          { expiresIn: "1d" } // Token expiry (1 day)
-        );
+        if (!existingUser) {
+            return res.status(400).json({ message: "User not found" });
+        }
+        console.log(existingUser)
 
-        const { password, ...otherDetails } = foundLawyer._doc; // Exclude password from response
-        return res.status(200).json({
-          success: true,
-          message: "Authentication successful",
-          userType: "lawyer",
-          token, // Send JWT token in the response
-          userDocument: otherDetails,
+        const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: "Invalid password" });
+        }
+
+        const token = generateToken(existingUser);
+
+        res.status(200).json({
+            message: "Login successful",
+            user: {
+                id: existingUser._id,
+                firstName: existingUser.firstName,
+                lastName: existingUser.lastName,
+                email: existingUser.email,
+                phone: existingUser.phone,
+            },
+            token: token
         });
-      } else {
-        console.log("Password mismatch or lawyer status invalid");
-        return res.status(401).json({ success: false, message: "Authentication failed for lawyer" });
-      }
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ message: error.message });
     }
-
-    // Check for User
-    const foundUser = await userModel.findOne({ email });
-    if (foundUser) {
-      const passwordMatch = await bcrypt.compare(password, foundUser.password);
-
-      if (passwordMatch) {
-        // Generate JWT token
-        const token = jwt.sign(
-          { id: foundUser._id, role: "user" }, // Payload
-          process.env.JWT_SECRET, // Secret key from .env file
-          { expiresIn: "1d" } // Token expiry (1 day)
-        );
-
-        const { password, ...otherDetails } = foundUser._doc; // Exclude password from response
-        return res.status(200).json({
-          success: true,
-          message: "Authentication successful",
-          userType: "user",
-          token, // Send JWT token in the response
-          userDocument: otherDetails,
-        });
-      } else {
-        console.log("Password mismatch for user");
-        return res.status(401).json({ success: false, message: "Authentication failed for user" });
-      }
-    }
-
-    console.log("No user or lawyer found with the given email");
-    return next(createError(404, "User not found"));
-
-  } catch (err) {
-    console.error("Error during authentication process:", err);
-    next(err);
-  }
 };
 
-export default login;
+// Example of a function to generate a JWT token
+
+const generateToken = (user) => {
+    // Replace with your own secret key and expiration time
+    const secretKey = 'your-secret-key';
+    const expirationTime = '1h'; // Token expires in 1 hour
+
+    // Generate a token
+    return jwt.sign(
+        { userId: user._id, email: user.email },  // Payload
+        secretKey,                               // Secret key
+        { expiresIn: expirationTime }            // Options
+    );
+};
+
+export default login

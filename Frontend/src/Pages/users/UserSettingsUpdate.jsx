@@ -1,65 +1,88 @@
 "use client"
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import axios from 'axios'; // Import Axios
 import {User, Mail, Phone, Lock, Eye, EyeOff, ChevronDown} from 'lucide-react'
 import {Helmet} from "react-helmet";
 import Header from "../users/Header";
 
 export default function UserSettingUpdateForm() {
-    const [showPassword, setShowPassword] = useState(false)
-    const [showVerifyPassword, setShowVerifyPassword] = useState(false)
-    const [backgroundChecks, setBackgroundChecks] = useState({
-        DBS: false,
-        PGCE: false,
-        Masters: false,
-        'Police Check': false
-    })
+   const [showPassword, setShowPassword] = useState(false);
+  const [backgroundChecks, setBackgroundChecks] = useState({
+    DBS: false,
+    PGCE: false,
+    Masters: false,
+    "Police Check": false,
+  });
 
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        password: '',
-        nationality: '',
-        residentId: '',
-        dateOfBirth: '',
-        country: '',
-        area: '',
-        organization: ''
-    });
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    password: "",
+    nationality: "",
+    residentId: "",
+    country: "",
+    area: "",
+    organization: "",
+  });
 
-    const handleCheckboxChange = (check) => {
-        setBackgroundChecks(prev => ({
-            ...prev,
-            [check]: !prev[check]
-        }))
+  // Fetch current user data on mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(""); // Replace with your API endpoint
+        const data = response.data;
+        setFormData({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          nationality: data.nationality,
+          residentId: data.residentId,
+          country: data.country,
+          area: data.area,
+          organization: data.organization,
+        });
+        setBackgroundChecks(data.backgroundChecks || {});
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleCheckboxChange = (check) => {
+    setBackgroundChecks((prev) => ({
+      ...prev,
+      [check]: !prev[check],
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.put("YOUR_BACKEND_API_URL", {
+        ...formData,
+        backgroundChecks,
+      });
+      console.log("User updated successfully:", response.data);
+      // Optionally show a success message or redirect
+    } catch (error) {
+      console.error("Error updating user:", error);
     }
-
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission
-
-        try {
-            const response = await axios.post('YOUR_BACKEND_API_URL', {
-                ...formData,
-                backgroundChecks
-            });
-            console.log('User  registered successfully:', response.data);
-            // Handle success (e.g., show a success message, redirect, etc.)
-        } catch (error) {
-            console.error('Error registering user:', error);
-            // Handle error (e.g., show an error message)
-        }
-    }
+  };
 
     return (
         <>
@@ -174,7 +197,7 @@ export default function UserSettingUpdateForm() {
 
                     {/* Password */}
                     <div className="space-y-1">
-                        <label className="text-sm text-gray-600 font-normal">Password</label>
+                        <label className="text-sm text-gray-600 font-normal">Change Password</label>
                         <div className="relative">
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"/>
                             <input
@@ -192,30 +215,6 @@ export default function UserSettingUpdateForm() {
                                 className="absolute right-3 top-1/2 -translate-y-1/2"
                             >
                                 {showPassword ?
-                                    <EyeOff className="h-5 w-5 text-gray-400"/> :
-                                    <Eye className="h-5 w-5 text-gray-400"/>
-                                }
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Verify Password */}
-                    <div className="space-y-1">
-                        <label className="text-sm text-gray-600 font-normal">Verify Password</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"/>
-                            <input
-                                type={showVerifyPassword ? "text" : "password"}
-                                placeholder="Password"
-                                className="w-full pl-10 pr-10 py-2 bg-[#F5F5F5] rounded-md focus:outline-none"
-                                required
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowVerifyPassword(!showVerifyPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2"
-                            >
-                                {showVerifyPassword ?
                                     <EyeOff className="h-5 w-5 text-gray-400"/> :
                                     <Eye className="h-5 w-5 text-gray-400"/>
                                 }
@@ -255,9 +254,24 @@ export default function UserSettingUpdateForm() {
                                 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"/>
                         </div>
                     </div>
+                          {/* Resident Id */}
+                    <div className="space-y-1">
+                        <label className="text-sm text-gray-600 font-normal">Resident Id No</label>
+                        <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"/>
+                            <input
+                                type="text"
+                                name="residentId"
+                                value={formData.residentId}
+                                onChange={handleChange}
+                                placeholder="Enter Id"
+                                className="w-full pl-10 pr-4 py-2 bg-[#F5F5F5] rounded-md focus:outline-none"
+                            />
+                        </div>
+                    </div>
 
                     {/* Background Check */}
-                    <div className="col-span-2 space-y-2">
+                    <div className="col-span-2 space-y-4">
                         <label className="text-sm text-gray-600 font-normal">Background Check</label>
                         <div className="flex justify-between max-w-[500px]">
                             {Object.keys(backgroundChecks).map((check) => (
@@ -286,44 +300,16 @@ export default function UserSettingUpdateForm() {
                         </div>
                     </div>
 
-                    {/* Resident Id */}
-                    <div className="space-y-1">
-                        <label className="text-sm text-gray-600 font-normal">Resident Id No</label>
-                        <div className="relative">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"/>
-                            <input
-                                type="text"
-                                name="residentId"
-                                value={formData.residentId}
-                                onChange={handleChange}
-                                placeholder="Enter Id"
-                                className="w-full pl-10 pr-4 py-2 bg-[#F5F5F5] rounded-md focus:outline-none"
-                            />
-                        </div>
-                    </div>
 
-                    {/* DOB */}
-                    <div className="space-y-1">
-                        <label className="text-sm text-gray-600 font-normal">DOB</label>
-                        <div className="relative">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"/>
-                            <input
-                                type="text"
-                                name="dateOfBirth"
-                                value={formData.dateOfBirth}
-                                onChange={handleChange}
-                                placeholder="e.g 02/12/2000"
-                                className="w-full pl-10 pr-4 py-2 bg-[#F5F5F5] rounded-md focus:outline-none"
-                            />
-                        </div>
-                    </div>
+
+
                 </form>
 
                 {/* Sign Up Button */}
                 <div className="flex justify-center mt-8">
-                    <button type="submit" style={{backgroundColor: "#236508"}}
-                            className="px-16 py-2.5 bg-[#2B 7A0B] text-white rounded-md hover:bg-[#236508] transition-colors">
-                        Sign Up
+                    <button type="submit" style={{backgroundColor: "#ffcc00"}}
+                            className="px-16 py-2.5 bg-[#ffcc00] text-white rounded-md hover:bg-[#236508] transition-colors">
+                       <strong>Update</strong>
                     </button>
                 </div>
             </div>

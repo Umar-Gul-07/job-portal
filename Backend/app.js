@@ -1,15 +1,12 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import err from './utils/error.js';
 import user from './routes/user.js';
-import lawyer from './routes/lawyer.js';
 import authentication from './routes/authentication.js';
-import stripe from 'stripe';
 import payment from './routes/payment.js';
 import cors from 'cors';
 import Rating from './routes/rating.js';
-import { Server } from 'socket.io'; // Correct import for socket.io
+import { Server } from 'socket.io';
 
 const app = express();
 dotenv.config();

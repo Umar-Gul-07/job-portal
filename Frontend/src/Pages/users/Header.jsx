@@ -1,10 +1,19 @@
 import {Avatar, AvatarFallback, AvatarImage} from "../../components/ui/avatar";
 import {Button} from "../../components/ui/button";
 import {LogOut} from "lucide-react";
-import React from "react";
-import {Link} from "react-router-dom";
-
+import React, {useContext} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {Store} from "Utils/Store"
 const Header = () => {
+    const { dispatch } = useContext(Store);
+    const navigate = useNavigate()
+
+  const handleLogout = () => {
+    dispatch({ type: "ClearUserInfo" });
+    localStorage.removeItem("UserInfo");
+    navigate("/")
+    // window.location.href = "/login";
+  };
     return (
         <>
             <header className="flex items-center justify-between border-b bg-[#ECF0FA] px-6 py-4">
@@ -40,7 +49,8 @@ const Header = () => {
                         <Button variant="ghost">Notification</Button>
                     </Link>
                 </nav>
-                <Button variant="ghost" className="flex items-center gap-1">
+                <Button       onClick={handleLogout}
+ variant="ghost" className="flex items-center gap-1 bg-[#ffcc00]">
                     Log-Out
                     <LogOut className="h-4 w-4"/>
                 </Button>
