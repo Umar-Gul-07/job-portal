@@ -11,6 +11,7 @@ import JobDetail from "./Pages/users/JobDetail";
 import JobSearch from "./Pages/users/JobSearch";
 import Notifications from "./Pages/users/Notification";
 import JobListings from "./Pages/users/JobListing";
+import UserSettingUpdateForm from "./Pages/users/UserSettingsUpdate";
 
 
 
@@ -37,6 +38,7 @@ function App() {
           <Route path='/user/job-search' element={<JobSearch/>} />
           <Route path='/user/job-detail' element={<JobDetail/>} />
           <Route path='/user/notification' element={<Notifications/>} />
+          <Route path='/user/settings/update' element={<UserSettingUpdateForm/>} />
 
           <Route path='*' element={<PageNotFound404 />} />
 

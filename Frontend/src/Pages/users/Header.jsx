@@ -21,7 +21,7 @@ const Header = () => {
                     </div>
                 </Avatar>
                 <nav className="absolute left-1/2 flex -translate-x-1/2 space-x-8">
-                     <Link to="/user-chat">
+                     <Link to="/">
                         <Button variant="ghost">Home</Button>
                     </Link>
                      <Link to="/user/job-listing">
@@ -33,7 +33,7 @@ const Header = () => {
                     <Link to="/user-chat">
                         <Button variant="ghost">Chat</Button>
                     </Link>
-                     <Link to="/user-chat">
+                     <Link to="/user/settings/update">
                         <Button variant="ghost">Settings</Button>
                     </Link>
                      <Link to="/user/notification">

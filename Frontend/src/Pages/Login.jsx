@@ -89,6 +89,7 @@ export default function Login() {
                   Job seeker
                 </Button>
                 </Link>
+                <Link to="/user-registration">
                 <Button
                   type="button"
                   variant="outline"
@@ -96,6 +97,7 @@ export default function Login() {
                 >
                   I want to Hire
                 </Button>
+                </Link>
               </div>
             </div>
           </form>
