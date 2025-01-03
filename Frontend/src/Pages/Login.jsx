@@ -1,72 +1,107 @@
-const Login = () => {
-    return (
-        <>
-            <div className="flex justify-center items-center min-h-screen bg-gray-50">
-                <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
-                    <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
+import { Button } from "../components/ui/button"
+import { Input } from "../components/ui/input"
+import { Card, CardContent } from "../components/ui/card"
+import {Link} from "react-router-dom";
 
+export default function Login() {
+  const [showPassword, setShowPassword] = useState(false)
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
 
-                    <div className="mb-4">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <div className="relative">
-                            <input
-                                id="email"
-                                type="email"
-                                placeholder="Enter Email"
-                                className="w-full px-4 py-2 border rounded-lg text-gray-700 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                            />
-                            <span className="absolute inset-y-0 right-4 flex items-center text-gray-400 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-               stroke="currentColor" className="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 12v.01m-6.938 4.906A9 9 0 1112 3a9 9 0 01-6.938 13.906z"/>
-          </svg>
-        </span>
-                        </div>
-                    </div>
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // Handle login logic here
+    console.log('Form submitted:', formData)
+  }
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
 
-                    <div className="mb-6">
-                        <label htmlFor="password"
-                               className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <div className="relative">
-                            <input
-                                id="password"
-                                type="password"
-                                placeholder="Enter Password"
-                                className="w-full px-4 py-2 border rounded-lg text-gray-700 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                            />
-                        </div>
-                    </div>
-
-
-                    <div className="mb-4">
-                        <button
-                            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition">
-                            Log in
-                        </button>
-                    </div>
-
-                    <p className="text-center text-gray-500 text-sm mb-4">Or</p>
-
-
-                    <div className="text-center mb-2 text-gray-700 font-medium">Register as</div>
-                    <div className="flex justify-between gap-4">
-                        <button
-                            className="flex-1 bg-green-100 text-green-700 py-2 px-4 rounded-lg border border-green-500 hover:bg-green-200 transition">
-                            Job seeker
-                        </button>
-                        <button
-                            className="flex-1 bg-white text-gray-700 py-2 px-4 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
-                            I want to Hire
-                        </button>
-                    </div>
-                </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white p-4">
+      <Card className="w-full max-w-lg p-6 bg-[#f7fcfc] rounded-lg">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <h1 className="text-2xl font-semibold text-center mb-6">Login</h1>
+            
+            <div className="space-y-2">
+              <label className="text-sm text-gray-600">Email</label>
+              <div>
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="Enter Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 bg-gray-100 rounded-md"
+                />
+              </div>
             </div>
 
+            <div className="space-y-2">
+              <label className="text-sm text-gray-600">Password</label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter Password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 bg-gray-100 rounded-md"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
 
-        </>
-    )
+            <Button 
+              type="submit" 
+              className="w-full bg-[#2b8200] hover:bg-green-700 text-white py-2 rounded-md"
+            >
+              Log in
+            </Button>
+
+            <div className="text-center text-gray-500">Or</div>
+
+            <div className="space-y-4">
+              <p className="text-center font-medium">Register as</p>
+              <div className="grid grid-cols-2 gap-4">
+                <Link to="/user-registration">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full bg-[#C0DAB3] hover:bg-[#c8d9c9] text-black"
+                >
+                  Job seeker
+                </Button>
+                </Link>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full bg-white hover:bg-gray-50"
+                >
+                  I want to Hire
+                </Button>
+              </div>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  )
 }
 
-export default Login

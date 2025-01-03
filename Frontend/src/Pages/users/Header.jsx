@@ -24,7 +24,7 @@ const Header = () => {
                      <Link to="/user-chat">
                         <Button variant="ghost">Home</Button>
                     </Link>
-                     <Link to="/job-listing">
+                     <Link to="/user/job-listing">
                         <Button variant="ghost">Jobs</Button>
                     </Link>
                      <Link to="/user-chat">
@@ -35,6 +35,9 @@ const Header = () => {
                     </Link>
                      <Link to="/user-chat">
                         <Button variant="ghost">Settings</Button>
+                    </Link>
+                     <Link to="/user/notification">
+                        <Button variant="ghost">Notification</Button>
                     </Link>
                 </nav>
                 <Button variant="ghost" className="flex items-center gap-1">

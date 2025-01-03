@@ -1,133 +1,177 @@
-import {Avatar, AvatarFallback, AvatarImage} from "../../components/ui/avatar"
-import {Button} from "../../components/ui/button"
-import {Card} from "../../components/ui/card"
-import {LogOut} from 'lucide-react'
-import Header from "./Header";
-import React from "react";
+import { useState } from 'react'
+import { LogOut, Mic, Paperclip, Send } from 'lucide-react'
+import { Button } from "../../components/ui/button"
+import { Input } from "../../components/ui/input"
+import { Avatar, AvatarImage, AvatarFallback } from "../../components/ui/avatar"
+import { Card, CardContent } from "../../components/ui/card"
+import Header from "../users/Header";
 
-const JobListing = () => {
-    return (
-        <>
-            <div className="flex h-screen flex-col bg-gray-50">
-                {/* Navigation */}
-                <Header/>
-                {/* Main Content */}
-                <main className="flex-1 overflow-auto p-6">
-                    <div className="mx-auto max-w-4xl space-y-4">
-                        {/* Job Header Card */}
-                        <Card className="bg-slate-100 p-4 shadow-sm" style={{width: "100%"}}>
-                            <div className="flex gap-4">
-                                <div className="h-16 w-16 flex-shrink-0">
-                                    <div className="w-12 h-12 bg-gray-200 rounded-full">
-                                        <img
-                                            src="https://placehold.io/100"
-                                            alt="Parkhouse English School"
-                                            width={64}
-                                            height={64}
-                                            className="h-full w-full rounded-full object-cover"
-                                        />
-                                    </div>
+// Job Card Component
+const JobCard = ({ title, school, coverFrom, coverTo, payPerDay, description }) => (
+  <div className="bg-white rounded-xl p-6 border border-[#E5E7EB] shadow-sm">
+    <div className="flex gap-4">
+      <div className="relative">
+        <Avatar className="h-14 w-14 rounded-full border-[1px] border-black">
+          <AvatarImage src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-01%20202231-FVjv9TGizfnSdARH7nPOukiU2MkI2b.png" alt={school} className="object-cover" />
+          <AvatarFallback>
+            <AvatarImage src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-01%20202231-FVjv9TGizfnSdARH7nPOukiU2MkI2b.png" alt="School" />
+          </AvatarFallback>
+        </Avatar>
+      </div>
+      <div className="flex-1 space-y-1">
+        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+        <p className="text-gray-500 text-xs">{school}</p>
+        <div className="space-y-1">
+          <p className="text-gray-500 text-xs">Cover from: {coverFrom}</p>
+          <p className="text-gray-500 text-xs">Cover to: {coverTo}</p>
+          <p className="text-gray-500 text-xs">Pay per day: {payPerDay}/day</p>
+        </div>
+        <p className="text-gray-600 font-semibold text-xs pt-0.5">{description}</p>
+      </div>
+    </div>
+  </div>
+)
 
-                                </div>
-                                <div className="space-y-1">
-                                    <h1 className="text-xl font-semibold">Parkhouse English School</h1>
-                                    <p className="text-gray-600">Cover Supervisor Required</p>
-                                    <p className="font-medium ">Cover : 7 days</p>
-                                    <p className="text-sm text-gray-500">Short time cover</p>
-                                    <p className="font-medium">$17/hr</p>
-                                </div>
-                            </div>
-                        </Card>
+// Info Card Component
+const InfoCard = ({ title, createdOn, lastUpdated }) => (
+  <Card className="bg-white border border-[#C5BEBE]">
+    <CardContent className="p-6 space-y-1">
+      {title && <h3 className="font-medium text-sm pb-1">{title}</h3>}
+      {createdOn && <p className="text-xs text-gray-600 pb-1">Created on {createdOn}</p>}
+      {lastUpdated && <p className="text-xs text-gray-600 pb-1">last updated {lastUpdated}</p>}
+    </CardContent>
+  </Card>
+)
 
-                        {/* Details Card */}
-                        <Card className="bg-slate-100 p-4">
-                            {/* Date and Time Details */}
-                            <div className="grid grid-cols-4 text-sm">
-                                <div>
-                                    <p>Start Date : 14-09-2024</p>
-                                </div>
-                                <div>
-                                    <p>End Date : 23-09-2024</p>
-                                </div>
-                                <div>
-                                    <p>Start Time : 07:00am</p>
-                                </div>
-                                <div>
-                                    <p>End Time : 14:30 pm</p>
-                                </div>
-                            </div>
+export default function JobListings() {
+  const [message, setMessage] = useState('')
 
-                            {/* Payment Details */}
-                            <div className="mt-4 space-y-1">
-                                <p className="font-medium">Pay: 350 QR/day</p>
-                                <p className="text-sm text-gray-600">Payment Method: Bank Transfer</p>
-                            </div>
+  const jobsAvailable = [
+    {
+      title: "French Cover Teacher",
+      school: "Birmingham High School",
+      coverFrom: "14-03-21",
+      coverTo: "14-04-21",
+      payPerDay: "180",
+      description: "We are seeking a passionate and adaptable French Cover Teacher to deliver high-quality lessons in the absence of the regular teacher"
+    },
+    {
+      title: "French Cover Teacher",
+      school: "Birmingham High School",
+      coverFrom: "14-03-21",
+      coverTo: "14-04-21",
+      payPerDay: "180",
+      description: "We are seeking a passionate and adaptable French Cover Teacher to deliver high-quality lessons in the absence of the regular teacher"
+    },
+    {
+      title: "French Cover Teacher",
+      school: "Birmingham High School",
+      coverFrom: "14-03-21",
+      coverTo: "14-04-21",
+      payPerDay: "180",
+      description: "We are seeking a passionate and adaptable French Cover Teacher to deliver high-quality lessons in the absence of the regular teacher"
+    },
+    {
+      title: "French Cover Teacher",
+      school: "Birmingham High School",
+      coverFrom: "14-03-21",
+      coverTo: "14-04-21",
+      payPerDay: "180",
+      description: "We are seeking a passionate and adaptable French Cover Teacher to deliver high-quality lessons in the absence of the regular teacher"
+    }
+  ]
 
-                            {/* Qualifications */}
-                            <div className="mt-4 space-y-2">
-                                <h2 className="text-lg font-semibold">Qualifications</h2>
-                                <div className="space-y-1">
-                                    <p className="text-gray-600">NQT</p>
-                                    <p className="text-gray-600">PGCE or Equivalent</p>
-                                </div>
-                            </div>
+  const jobsApplied = [
+    {
+      title: "French Cover Teacher",
+      school: "Birmingham High School",
+      coverFrom: "14-03-21",
+      coverTo: "14-04-21",
+      payPerDay: "180",
+      description: "We are seeking a passionate and adaptable French Cover Teacher to deliver high-quality lessons in the absence of the regular teacher"
+    },
+    {
+      title: "French Cover Teacher",
+      school: "Birmingham High School",
+      coverFrom: "14-03-21",
+      coverTo: "14-04-21",
+      payPerDay: "180",
+      description: "We are seeking a passionate and adaptable French Cover Teacher to deliver high-quality lessons in the absence of the regular teacher"
+    },
+    {
+      title: "French Cover Teacher",
+      school: "Birmingham High School",
+      coverFrom: "14-03-21",
+      coverTo: "14-04-21",
+      payPerDay: "180",
+      description: "We are seeking a passionate and adaptable French Cover Teacher to deliver high-quality lessons in the absence of the regular teacher"
+    },
+    {
+      title: "French Cover Teacher",
+      school: "Birmingham High School",
+      coverFrom: "14-03-21",
+      coverTo: "14-04-21",
+      payPerDay: "180",
+      description: "We are seeking a passionate and adaptable French Cover Teacher to deliver high-quality lessons in the absence of the regular teacher"
+    }
+  ]
 
-                            {/* Background Checks */}
-                            <div className="mt-4 space-y-2">
-                                <h2 className="text-lg font-semibold">Background Checks</h2>
-                                <div className="space-y-1">
-                                    <p className="text-gray-600">Police check</p>
-                                    <p className="text-gray-600">DBS check</p>
-                                </div>
-                            </div>
-                        </Card>
-
-                        {/* Apply Button */}
-                        <div className="flex justify-center">
-                            <Button
-                                className="w-[400px] bg-[#2B8A0E] hover:bg-[#247A0C] text-white py-2 rounded-md"
-                            >
-                                Apply for the Job
-                            </Button>
-                        </div>
-
-                        {/* Payment Options */}
-                        <div className="space-y-4 pt-2">
-                            <p className="text-center text-[#2B8A0E]">Pay 15.00 QR</p>
-                            <div className="flex justify-center gap-4">
-                                <Button
-                                    variant="outline"
-                                    className="flex w-[120px] items-center justify-center gap-2 rounded-md border border-[#C5BEBE] bg-white px-4 py-2 hover:bg-gray-50"
-                                >
-                                    <img
-                                        src="https://img.icons8.com/material-sharp/24/000000/mac-os.png"
-                                        alt="Apple Pay"
-                                        width={20}
-                                        height={20}
-                                        className="h-5 w-5"
-                                    />
-                                    <span className="text-black">Pay</span>
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    className="flex w-[120px] items-center justify-center gap-2 rounded-md border border-[#C5BEBE] bg-white px-4 py-2 hover:bg-gray-50"
-                                >
-                                    <img
-                                        src="https://img.icons8.com/color/48/000000/google-logo.png"
-                                        alt="Google Pay"
-                                        width={20}
-                                        height={20}
-                                        className="h-5 w-5"
-                                    />
-                                    <span className="text-black">Pay</span>
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header/>
+      <main className="max-w-6xl mx-auto px-6 py-8 pb-32">
+        <div className="space-y-8 mb-8">
+          <section>
+            <h2 className="text-lg font-semibold mb-3">Jobs Available</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {jobsAvailable.map((job, index) => (
+                <JobCard key={`available-${index}`} {...job} />
+              ))}
             </div>
-        </>
-    )
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold mb-3">Jobs Applied</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {jobsApplied.map((job, index) => (
+                <JobCard key={`applied-${index}`} {...job} />
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center gap-4 p-2 rounded-xl bg-white border border-[#D3E0F3]">
+            <Input
+              className="flex-1 border-0 bg-transparent text-sm focus-visible:ring-0 px-0 h-8"
+              placeholder="Type here"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-transparent">
+                <Paperclip className="h-5 w-5 text-gray-500" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-transparent">
+                <Mic className="h-5 w-5 text-gray-500" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Send className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4 mb-7">
+            <InfoCard
+              title="Parkhouse High"
+              createdOn="24-08-24"
+              lastUpdated="13-04-24"
+            />
+            <InfoCard title="Doha" />
+            <InfoCard />
+          </div>
+        </div>
+      </main>
+    </div>
+  )
 }
 
-export default JobListing

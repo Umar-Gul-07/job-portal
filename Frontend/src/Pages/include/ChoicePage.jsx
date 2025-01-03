@@ -7,7 +7,7 @@ const ChoicePage = () => {
         navigate("/login")
     };
     const handleHireLoginClick = (type) => {
-        navigate("/user-registration")
+        navigate("/login")
     };
     const handleRegisterJobSeekerClick = (type) => {
         navigate("/user-registration")
@@ -17,8 +17,8 @@ const ChoicePage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white flex items-center justify-center p-4">
-            <div className="w-full max-w-md space-y-8">
+        <div className="min-h-screen flex items-center justify-center p-4">
+            <div className="w-full max-w-md space-y-8 bg-[#f7fcfc] p-10">
                 {/* LoginChoice Section */}
                 <div className="text-center">
                     <h1 className="text-2xl font-semibold text-[#333333] mb-6">
