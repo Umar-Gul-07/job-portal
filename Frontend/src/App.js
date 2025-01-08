@@ -14,6 +14,12 @@ import JobListings from "./Pages/users/JobListing";
 import UserSettingUpdateForm from "./Pages/users/UserSettingsUpdate";
 import SchoolRegistration from "./Pages/school/SchoolRegistration";
 import SchoolLogin from "./Pages/school/SchoolLogin";
+import Profile from "./Pages/users/Profile";
+import SchoolProfile from "./Pages/school/SchoolProfile";
+import SchoolJobs from "./Pages/school/SchoolJobs";
+import JobApplicantList from "./Pages/school/JobApplicantList";
+import JobsAppliedList from "./Pages/school/JobsAppliedList";
+import SchoolSettings from "./Pages/school/SchoolSetting";
 
 
 function App() {
@@ -34,6 +40,7 @@ function App() {
 
                     {/* User Routes */}
                     <Route path='/user-registration' element={<UserRegistrationForm/>}/>
+                    <Route path='/user-profile' element={<Profile/>}/>
                     <Route path='/user-chat' element={<UserChat/>}/>
                     <Route path='/user/job-listing' element={<JobListings/>}/>
                     <Route path='/user/job-search' element={<JobSearch/>}/>
@@ -44,6 +51,11 @@ function App() {
                     {/* User Routes */}
                     <Route path='/school-registration' element={<SchoolRegistration/>}/>
                     <Route path='/school-login' element={<SchoolLogin/>}/>
+                    <Route path='/school-jobs' element={<SchoolJobs/>}/>
+                    <Route path='/school-profile' element={<SchoolProfile/>}/>
+                    <Route path='/school-settings' element={<SchoolSettings/>}/>
+                    <Route path='/school-jobs-applicant' element={<JobApplicantList/>}/>
+                    <Route path='/school-jobs-applied' element={<JobsAppliedList/>}/>
 
 
 

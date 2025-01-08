@@ -9,7 +9,7 @@ function NotificationCard({title, duration, rate, imageUrl}) {
                 <div className="flex items-center gap-4">
                     <div className="relative w-14 h-14 overflow-hidden rounded-full">
                         <img
-                            src={imageUrl}
+                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-12-21%20234547-10D5DLrL80fLYA5En2D0XV5JInFFWv.png"
                             alt="School building"
                             className="object-cover"
                         />
