@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import user from './routes/user.js';
+import school from './routes/school.js';
 import authentication from './routes/authentication.js';
 import payment from './routes/payment.js';
 import cors from 'cors';
@@ -43,6 +44,7 @@ app.use((err, req, res, next) => {
 
 // Routes
 app.use('/user', user);
+app.use('/school', school);
 app.use('/payments', payment);
 app.use('/auth', authentication);
 app.use('/rating', Rating);

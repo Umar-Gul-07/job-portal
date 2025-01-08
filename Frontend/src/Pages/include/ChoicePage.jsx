@@ -7,13 +7,13 @@ const ChoicePage = () => {
         navigate("/login")
     };
     const handleHireLoginClick = (type) => {
-        navigate("/login")
+        navigate("/school-login")
     };
     const handleRegisterJobSeekerClick = (type) => {
         navigate("/user-registration")
     };
     const handleRegisterHireClick = (type) => {
-        navigate("/user-registration")
+        navigate("/school-registration")
     };
 
     return (
