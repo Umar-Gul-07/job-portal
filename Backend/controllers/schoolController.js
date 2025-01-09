@@ -58,6 +58,7 @@ class schoolController {
                 return res.status(404).json({error: "School not found."});
             }
             const schoolName = school.schoolName
+            const location = school.area
 
             // Create a new job
             const newJob = new Job({
@@ -72,6 +73,7 @@ class schoolController {
                 timeStart,
                 timeEnd,
                 paymentMethod,
+                location,
                 qualifications,
                 backgroundChecks,
                 jobDurationDays,
@@ -87,6 +89,22 @@ class schoolController {
             res.status(500).json({error: "Server error"});
         }
     };
+
+    static getJob = async (req, res) => {
+        try {
+            const jobs = await Job.find({}); // Replace `Job` with your Mongoose model name
+
+            if (!jobs || jobs.length === 0) {
+                return res.status(404).json({message: "No jobs found"});
+            }
+
+            res.status(200).json(jobs);
+        } catch (error) {
+            console.error("Error fetching jobs:", error);
+            res.status(500).json({message: "Internal server error", error: error.message});
+        }
+    };
+
 
 }
 

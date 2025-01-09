@@ -12,6 +12,7 @@ const jobSchema = new mongoose.Schema({
     timeStart: {type: String, required: false},
     timeEnd: {type: String, required: false},
     paymentMethod: {type: String, required: false},
+    location: {type: String, required: false},
     qualifications: {type: [String], required: false},
     backgroundChecks: {type: [String], required: false},
     jobDurationDays: {type: Number, required: false},
