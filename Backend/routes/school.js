@@ -5,5 +5,6 @@ import schoolController from "../controllers/schoolController.js";
 const router = express.Router();
 
 router.post('/register', emailAndPasswordValidation, validate, schoolController.register);
+router.post('/add/job', schoolController.addJob);
 
 export default router;

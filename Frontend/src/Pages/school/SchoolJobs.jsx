@@ -10,7 +10,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu"
-import {useState} from 'react'
+import React, {useState} from 'react'
 import Header from "./Header";
 import {Link} from "react-router-dom";
 
@@ -105,6 +105,14 @@ export default function SchoolJobs() {
             <main className="flex-1 px-4 sm:px-6 py-4 space-y-4 w-full max-w-7xl mx-auto">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <h1 className="text-xl font-medium">Hello Park High School,</h1>
+                    <Link to='/school-add-job'>
+
+                        <Button
+                            variant="ghost" className="flex items-center gap-1 bg-[#ffcc00]">
+                            ADD JOB
+
+                        </Button>
+                    </Link>
                     <div className="relative w-full sm:w-72">
                         <Input
                             type="search"
