@@ -6,14 +6,14 @@ import Home from "./Pages/Home";
 import LoginChoice from "./Pages/LoginChoice";
 import Login from "./Pages/Login";
 import UserRegistrationForm from "./Pages/users/UserRegistration";
-import UserChat from "./Pages/users/UserChat";
-import JobDetail from "./Pages/users/JobDetail";
+ import JobDetail from "./Pages/users/JobDetail";
 import JobSearch from "./Pages/users/JobSearch";
 import Notifications from "./Pages/users/Notification";
 import JobListings from "./Pages/users/JobListing";
 import UserSettingUpdateForm from "./Pages/users/UserSettingsUpdate";
 import SchoolRegistration from "./Pages/school/SchoolRegistration";
 import SchoolLogin from "./Pages/school/SchoolLogin";
+ import UserChat from "./Pages/users/UserChat";
 
 
 function App() {
