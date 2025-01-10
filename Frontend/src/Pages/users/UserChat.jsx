@@ -1,127 +1,80 @@
-import { useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
-import { Button } from "../../components/ui/button"
-import { Card } from "../../components/ui/card"
-import { Input } from "../../components/ui/input"
-import { ScrollArea } from "../../components/ui/scroll-area"
+import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { ScrollArea } from "../../components/ui/scroll-area";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu"
-import { Smile, Paperclip, Image, Send, Check, ChevronDown, Search } from 'lucide-react'
+} from "../../components/ui/dropdown-menu";
+import { Smile, Paperclip, Image, Send, Check, ChevronDown, Search } from "lucide-react";
 import Header from "./Header";
+import api from "../../Utils/Axios"; // Assuming the axios file is in the root level
 
 const UserChat = () => {
-    const [message, setMessage] = useState("")
+  const [conversations, setConversations] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [activeChatId, setActiveChatId] = useState(null);
+  const [message, setMessage] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const conversations = [
-    {
-      id: 1,
-      name: "Bj Doe",
-      message: "Yo, what's the update on the item I am expecting?",
-      time: "4 min ago",
-      unread: true,
-      unreadCount: 5,
-      avatar: "/aceholder.svg",
-    },
-    {
-      id: 2,
-      name: "Jane Doe",
-      message: "Yo, what's the update on the item I am expecting?",
-      time: "8 min ago",
-      unread: false,
-      read: true,
-      avatar: "/aceholder.svg",
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      message: "Yo, what's the update on the item I am expecting?",
-      time: "9 min ago",
-      unread: false,
-      read: true,
-      avatar: "/aceholder.svg",
-    },
-    {
-      id: 4,
-      name: "Mister Doe",
-      message: "Yo, what's the update on the item I am expecting?",
-      time: "15 min ago",
-      unread: false,
-      read: true,
-      avatar: "/aceholder.svg",
-    },
-    {
-      id: 5,
-      name: "Sam Doe",
-      message: "Can you confirm the delivery date for the shoes?",
-      time: "20 min ago",
-      unread: true,
-      avatar: "/aceholder.svg",
-    },
-    {
-      id: 6,
-      name: "Merril Doe",
-      message: "Yo, what's the update on the item I am expecting?",
-      time: "Yesterday",
-      unread: false,
-      read: true,
-      avatar: "/aceholder.svg",
-    },
-    {
-      id: 7,
-      name: "Sam Doe",
-      message: "Can you confirm the delivery date for the shoes?",
-      time: "Yesterday",
-      unread: true,
-      avatar: "/aceholder.svg",
-    },
-  ]
+  // Fetch Conversations
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        const response = await api.get("/conversations"); // API endpoint to fetch conversations
+        setConversations(response.data);
+      } catch (error) {
+        console.error("Error fetching conversations:", error);
+      }
+    };
+    fetchConversations();
+  }, []);
 
-  const chatMessages = [
-    {
-      id: 1,
-      sender: "Bj Doe",
-      message: "Hello, are you available for a quick call?",
-      time: "Friday 1:30pm",
-      avatar: "/aceholder.svg",
-    },
-    {
-      id: 2,
-      sender: "You",
-      message: "Sure, send me the meeting link so we can start the call",
-      time: "4 min ago",
-      isOwn: true,
-    },
-    {
-      id: 3,
-      sender: "You",
-      message: "Sure, send me the meeting link so we can start the call",
-      time: "4 min ago",
-      isOwn: true,
-    },
-    {
-      id: 4,
-      sender: "Bj Doe",
-      message: "Sure will send the link shortly",
-      time: "",
-      avatar: "/aceholder.svg",
-    },
-    {
-      id: 5,
-      sender: "Bj Doe",
-      message: "http://feeds/com",
-      time: "",
-      avatar: "/aceholder.svg",
-    },
-  ]
+  // Fetch Messages for Active Chat
+  useEffect(() => {
+    if (!activeChatId) return;
+
+    const fetchMessages = async () => {
+      try {
+        const response = await api.get(`/messages/${activeChatId}`); // API endpoint to fetch messages for a chat
+        setChatMessages(response.data);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+    fetchMessages();
+  }, [activeChatId]);
+
+  // Handle Send Message
+  const sendMessage = async () => {
+    if (!message.trim() || !activeChatId) return;
+
+    try {
+      const newMessage = {
+        chatId: activeChatId,
+        content: message.trim(),
+      };
+      const response = await api.post("/messages", newMessage); // API endpoint to send a message
+      setChatMessages((prev) => [...prev, response.data]);
+      setMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  // Filtered Conversations
+  const filteredConversations = conversations.filter((chat) =>
+    chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex h-screen flex-col">
       {/* Navigation */}
-      <Header/>
+      <Header />
       <div className="flex flex-1 overflow-hidden pt-4">
         {/* Sidebar */}
         <aside className="w-[360px] bg-[#EDF2FA] p-2">
@@ -132,6 +85,8 @@ const UserChat = () => {
                 className="h-8 w-full rounded-lg border-[#D9D9D9] bg-white -9 text-sm focus-visible:ring-0"
                 placeholder="Search"
                 type="search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <DropdownMenu>
@@ -155,10 +110,13 @@ const UserChat = () => {
 
           <ScrollArea className="h-[calc(100vh-8rem)] pr-1">
             <div className="mt-7 space-y-3">
-              {conversations.map((chat) => (
+              {filteredConversations.map((chat) => (
                 <div
                   key={chat.id}
-                  className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm"
+                  className={`flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm ${
+                    activeChatId === chat.id ? "ring-2 ring-blue-500" : ""
+                  }`}
+                  onClick={() => setActiveChatId(chat.id)}
                 >
                   <Avatar className="h-11 w-11 shrink-0">
                     <AvatarImage src={chat.avatar} />
@@ -170,7 +128,9 @@ const UserChat = () => {
                       <span className="text-xs text-gray-500 shrink-0">{chat.time}</span>
                     </div>
                     <div className="flex items-start gap-10 mt-1">
-                      <p className="text-sm text-gray-600 line-clamp-2 flex-1 max-w-[75%]">{chat.message}</p>
+                      <p className="text-sm text-gray-600 line-clamp-2 flex-1 max-w-[75%]">
+                        {chat.message}
+                      </p>
                       <div className="flex items-center justify-center shrink-0 pt-1">
                         {chat.unread ? (
                           <div className="h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-[10px] text-white font-medium">
@@ -203,7 +163,9 @@ const UserChat = () => {
                 <AvatarFallback>BD</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <h2 className="text-sm font-medium">Bj Doe</h2>
+                <h2 className="text-sm font-medium">
+                  {conversations.find((chat) => chat.id === activeChatId)?.name || "Select a Chat"}
+                </h2>
                 <div className="flex items-center gap-1">
                   <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
                   <span className="text-xs text-[#808080]">Active Now</span>
@@ -224,15 +186,11 @@ const UserChat = () => {
               {chatMessages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex ${
-                    msg.isOwn ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex ${msg.isOwn ? "justify-end" : "justify-start"}`}
                 >
                   <div
                     className={`rounded-2xl ${
-                      msg.isOwn
-                        ? "bg-black text-white w-1/2" 
-                        : "bg-[#ECF0FA] w-[90%]" 
+                      msg.isOwn ? "bg-black text-white w-1/2" : "bg-[#ECF0FA] w-[90%]"
                     }`}
                   >
                     {!msg.isOwn && (
@@ -287,7 +245,12 @@ const UserChat = () => {
                 <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-transparent">
                   <Image className="h-5 w-5 text-gray-500" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={sendMessage}
+                >
                   <Send className="h-5 w-5" />
                 </Button>
               </div>
@@ -296,7 +259,7 @@ const UserChat = () => {
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserChat
+export default UserChat;
