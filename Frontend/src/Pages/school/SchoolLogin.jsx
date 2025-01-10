@@ -28,7 +28,7 @@ export default function SchoolLogin() {
             toast.success("User Logged In")
             const user = response.data.user;
             dispatch({type: "UserLoggedIn", payload: user});
-            navigate("/user/job-listing")
+            navigate("/school-jobs")
         } catch (error) {
             // Handle errors such as incorrect credentials
             if (error.response && error.response.data) {
