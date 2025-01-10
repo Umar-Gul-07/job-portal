@@ -20,6 +20,7 @@ import SchoolJobs from "./Pages/school/SchoolJobs";
 import JobApplicantList from "./Pages/school/JobApplicantList";
 import JobsAppliedList from "./Pages/school/JobsAppliedList";
 import SchoolSettings from "./Pages/school/SchoolSetting";
+import AddJob from "./Pages/school/AddJob";
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
                     <Route path='/school-settings' element={<SchoolSettings/>}/>
                     <Route path='/school-jobs-applicant' element={<JobApplicantList/>}/>
                     <Route path='/school-jobs-applied' element={<JobsAppliedList/>}/>
+                    <Route path='/school-add-job' element={<AddJob/>}/>
 
 
 

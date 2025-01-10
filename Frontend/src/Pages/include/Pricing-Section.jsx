@@ -11,7 +11,7 @@ const jobSeekerFeatures = [
 
 const schoolFeatures = [
   'Post unlimited cover jobs.',
-  'Track Job Status',
+  'Track JobModel Status',
   'Access a pool of verified teachers.',
   'Instant match suggestions.',
   'Instant notifications for matching opportunities.'
@@ -25,10 +25,10 @@ export default function PricingSection() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <PricingCard
-            title="Job Seekers"
+            title="JobModel Seekers"
             description="Find cover teaching jobs easily."
             price="15"
-            unit="Per Job"
+            unit="Per JobModel"
             features={jobSeekerFeatures}
           />
 
