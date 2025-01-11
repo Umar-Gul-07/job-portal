@@ -22,7 +22,7 @@ const Header = () => {
                     <AvatarImage src="/placeholder.svg"/>
                     <div className="w-12 h-12 bg-gray-200 rounded-full">
                         <img
-                            src="https://placehold.io/100"
+                            src="/logo.jpg"
                             alt="Parkhouse English School"
                             width={64}
                             height={64}

@@ -1,88 +1,93 @@
 "use client"
 
-import React, {useEffect, useState} from 'react'
-import axios from 'axios'; // Import Axios
+import React, {useContext, useEffect, useState} from 'react'
 import {User, Mail, Phone, Lock, Eye, EyeOff, ChevronDown} from 'lucide-react'
 import {Helmet} from "react-helmet";
 import Header from "../users/Header";
+import api from "../../Utils/Axios";
+import {Store} from "../../Utils/Store"
+import {toast} from "react-toastify";
 
 export default function UserSettingUpdateForm() {
-   const [showPassword, setShowPassword] = useState(false);
-  const [backgroundChecks, setBackgroundChecks] = useState({
-    DBS: false,
-    PGCE: false,
-    Masters: false,
-    "Police Check": false,
-  });
+    const [showPassword, setShowPassword] = useState(false);
+    const {state} = useContext(Store)
+    const {UserInfo} = state
+    const [backgroundChecks, setBackgroundChecks] = useState({
+        DBS: false,
+        PGCE: false,
+        Masters: false,
+        "Police Check": false,
+    });
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    nationality: "",
-    residentId: "",
-    country: "",
-    area: "",
-    organization: "",
-  });
+    const [formData, setFormData] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        password: "",
+        nationality: "",
+        residentId: "",
+        country: "",
+        area: "",
+        organization: "",
+    });
 
-  // Fetch current user data on mount
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(""); // Replace with your API endpoint
-        const data = response.data;
-        setFormData({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          phone: data.phone,
-          nationality: data.nationality,
-          residentId: data.residentId,
-          country: data.country,
-          area: data.area,
-          organization: data.organization,
-        });
-        setBackgroundChecks(data.backgroundChecks || {});
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
+    // Fetch current user data on mount
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await api.get(`/user/get_user_by_id/${UserInfo.id}`); // Replace with your API endpoint
+                const data = response.data;
+                setFormData({
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    phone: data.phone,
+                    nationality: data.nationality,
+                    residentId: data.residentId,
+                    country: data.country,
+                    area: data.area,
+                    organization: data.organization,
+                });
+                setBackgroundChecks(data.backgroundChecks || {});
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    const handleCheckboxChange = (check) => {
+        setBackgroundChecks((prev) => ({
+            ...prev,
+            [check]: !prev[check],
+        }));
     };
 
-    fetchUserData();
-  }, []);
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
 
-  const handleCheckboxChange = (check) => {
-    setBackgroundChecks((prev) => ({
-      ...prev,
-      [check]: !prev[check],
-    }));
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.put("YOUR_BACKEND_API_URL", {
-        ...formData,
-        backgroundChecks,
-      });
-      console.log("User updated successfully:", response.data);
-      // Optionally show a success message or redirect
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
+        try {
+            const response = await api.put(`/user/update_user_by_id/${UserInfo.id}`, {
+                ...formData,
+                backgroundChecks,
+            });
+            console.log("User updated successfully:", response.data);
+            toast.success("Data Updated")
+            // Optionally show a success message or redirect
+        } catch (error) {
+            console.error("Error updating user:", error);
+        }
+    };
 
     return (
         <>
@@ -171,6 +176,7 @@ export default function UserSettingUpdateForm() {
                                 required
                             >
                                 <option value="">Select country</option>
+                                <option value={`${formData.country}`}>{formData.country}</option>
                             </select>
                             <ChevronDown
                                 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"/>
@@ -189,6 +195,7 @@ export default function UserSettingUpdateForm() {
                                 required
                             >
                                 <option value="">Choose area</option>
+                                <option value={`${formData.area}`}>{formData.area}</option>
                             </select>
                             <ChevronDown
                                 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"/>
@@ -249,12 +256,13 @@ export default function UserSettingUpdateForm() {
                                 className="w-full px-4 py-2 bg-[#F5F5F5] rounded-md focus:outline-none appearance-none"
                             >
                                 <option value="">please choose</option>
+                                <option value={`${formData.organization}`}>{formData.organization}</option>
                             </select>
                             <ChevronDown
                                 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"/>
                         </div>
                     </div>
-                          {/* Resident Id */}
+                    {/* Resident Id */}
                     <div className="space-y-1">
                         <label className="text-sm text-gray-600 font-normal">Resident Id No</label>
                         <div className="relative">
@@ -301,17 +309,14 @@ export default function UserSettingUpdateForm() {
                     </div>
 
 
-
-
+                    {/* Sign Up Button */}
+                    <div className="flex justify-center mt-8">
+                        <button type="submit" style={{backgroundColor: "#ffcc00"}}
+                                className="px-16 py-2.5 bg-[#ffcc00] text-white rounded-md hover:bg-[#236508] transition-colors">
+                            <strong>Update</strong>
+                        </button>
+                    </div>
                 </form>
-
-                {/* Sign Up Button */}
-                <div className="flex justify-center mt-8">
-                    <button type="submit" style={{backgroundColor: "#ffcc00"}}
-                            className="px-16 py-2.5 bg-[#ffcc00] text-white rounded-md hover:bg-[#236508] transition-colors">
-                       <strong>Update</strong>
-                    </button>
-                </div>
             </div>
         </>
     )

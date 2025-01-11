@@ -6,61 +6,111 @@ import bcrypt from 'bcrypt';
 
 class UserController {
 
-static register = async (req, res, next) => {
-    try {
-        console.log(req.body)
-        const {
-            firstName,
-            lastName,
-            email,
-            phone,
-            password,
-            nationality,
-            residentId,
-            dateOfBirth,
-            country,
-            area,
-            organization,
-            backgroundChecks
-        } = req.body;
+    static register = async (req, res, next) => {
+        try {
+            console.log(req.body)
+            const {
+                firstName,
+                lastName,
+                email,
+                phone,
+                password,
+                nationality,
+                residentId,
+                dateOfBirth,
+                country,
+                area,
+                organization,
+                backgroundChecks
+            } = req.body;
 
-        // Check if email already exists in the database
-        const existingUser = await user.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "Email already exists" });
+            // Check if email already exists in the database
+            const existingUser = await user.findOne({email});
+            if (existingUser) {
+                return res.status(400).json({message: "Email already exists"});
+            }
+
+            // Hash the password using bcrypt
+            const hashedPassword = await bcrypt.hash(password, 10);  // 10 is the salt rounds
+
+            // Create a new user with the hashed password
+            const newUser = new user({
+                firstName,
+                lastName,
+                email,
+                phone,
+                password: hashedPassword,
+                nationality,
+                residentId,
+                dateOfBirth,
+                country,
+                area,
+                organization,
+                backgroundChecks,
+            });
+
+            // Save the user to the database
+            await newUser.save();
+
+            // Respond with success message
+            res.status(201).json({message: "User registered successfully", user: newUser});
+        } catch (error) {
+            // Handle errors
+            res.status(500).json({message: error.message});
         }
-
-        // Hash the password using bcrypt
-        const hashedPassword = await bcrypt.hash(password, 10);  // 10 is the salt rounds
-
-        // Create a new user with the hashed password
-        const newUser = new user({
-            firstName,
-            lastName,
-            email,
-            phone,
-            password: hashedPassword,
-            nationality,
-            residentId,
-            dateOfBirth,
-            country,
-            area,
-            organization,
-            backgroundChecks,
-        });
-
-        // Save the user to the database
-        await newUser.save();
-
-        // Respond with success message
-        res.status(201).json({ message: "User registered successfully", user: newUser });
-    } catch (error) {
-        // Handle errors
-        res.status(500).json({ message: error.message });
     }
-}
 
+    static getUserById = async (req, res, next) => {
+        try {
+            const {id} = req.params; // Extract user ID from request parameters
 
+            // Find user by ID
+            const userDoc = await user.findById(id);
+
+            // Check if user exists
+            if (!userDoc) {
+                return res.status(404).json({message: "User not found"});
+            }
+
+            res.status(200).json(userDoc); // Return user details
+        } catch (error) {
+            console.error("Error fetching user by ID:", error);
+            next(createError(500, "Internal Server Error"));
+        }
+    };
+
+    static updateUserById = async (req, res, next) => {
+        try {
+            const {id} = req.params; // Extract user ID from request parameters
+            const updateData = req.body; // Extract update data from request body
+
+            // If password is being updated, hash the new password
+            if (updateData.password) {
+                const hashedPassword = await bcrypt.hash(updateData.password, 10);
+                updateData.password = hashedPassword;
+            }
+
+            // Find the user by ID and update
+            const updatedUser = await user.findByIdAndUpdate(
+                id,
+                {$set: updateData}, // Use `$set` to update only provided fields
+                {new: true} // Return the updated document
+            );
+
+            // Check if user exists
+            if (!updatedUser) {
+                return res.status(404).json({message: "User not found"});
+            }
+
+            res.status(200).json({
+                message: "User updated successfully",
+                user: updatedUser,
+            });
+        } catch (error) {
+            console.error("Error updating user:", error);
+            next(createError(500, "Internal Server Error"));
+        }
+    };
 
 
     static getAllUsers = async (req, res, next) => {
