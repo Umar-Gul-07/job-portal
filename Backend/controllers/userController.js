@@ -131,12 +131,14 @@ class UserController {
         const {location, bio, skills, education, workHistory, availability} = req.body;
 
         try {
-            const {id} = req.params
-            let profile = await Profile.findOne({user: id});
+            const {id} = req.params;
+            const profile = await Profile.findOne({user: id});
+
             if (!profile) {
                 return res.status(404).json({message: "Profile not found"});
             }
 
+            // Update fields
             profile.location = location || profile.location;
             profile.bio = bio || profile.bio;
             profile.skills = skills || profile.skills;
@@ -144,9 +146,16 @@ class UserController {
             profile.workHistory = workHistory || profile.workHistory;
             profile.availability = availability || profile.availability;
 
+            // Handle profile picture upload
+            if (req.file) {
+                const profilePictureUrl = `/uploads/${req.file.filename}`; // Adjust path as needed
+                profile.profilePicture = profilePictureUrl;
+            }
+
             await profile.save();
-            res.json(profile);
+            res.json({message: "Profile updated successfully", profile});
         } catch (error) {
+            console.error("Error updating profile:", error);
             res.status(500).json({message: "Server error"});
         }
     };
