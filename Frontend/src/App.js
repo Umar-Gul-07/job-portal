@@ -21,6 +21,7 @@ import JobApplicantList from "./Pages/school/JobApplicantList";
 import JobsAppliedList from "./Pages/school/JobsAppliedList";
 import SchoolSettings from "./Pages/school/SchoolSetting";
 import AddJob from "./Pages/school/AddJob";
+import EditProfilePage from "./Pages/users/EditProfile";
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
                     <Route path='/user/job-detail' element={<JobDetail/>}/>
                     <Route path='/user/notification' element={<Notifications/>}/>
                     <Route path='/user/settings/update' element={<UserSettingUpdateForm/>}/>
+                    <Route path='/user/profile-update' element={<EditProfilePage/>}/>
 
                     {/* User Routes */}
                     <Route path='/school-registration' element={<SchoolRegistration/>}/>
@@ -58,7 +60,6 @@ function App() {
                     <Route path='/school-jobs-applicant' element={<JobApplicantList/>}/>
                     <Route path='/school-jobs-applied' element={<JobsAppliedList/>}/>
                     <Route path='/school-add-job' element={<AddJob/>}/>
-
 
 
                     <Route path='*' element={<PageNotFound404/>}/>

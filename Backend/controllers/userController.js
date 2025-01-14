@@ -1,6 +1,7 @@
 // import lawyerModel from "../models/lawyerModel.js";
 import Payment from "../models/paymentModel.js";
 import user from "../models/userModel.js";
+import Profile from "../models/profileModel.js";
 import createError from "../utils/error.js";
 import bcrypt from 'bcrypt';
 
@@ -109,6 +110,44 @@ class UserController {
         } catch (error) {
             console.error("Error updating user:", error);
             next(createError(500, "Internal Server Error"));
+        }
+    };
+
+    static getProfile = async (req, res) => {
+        try {
+            const {id} = req.params;
+
+            const profile = await Profile.findOne({user: id});
+            if (!profile) {
+                return res.status(404).json({message: "Profile not found"});
+            }
+            res.json(profile);
+        } catch (error) {
+            res.status(500).json({message: "Server error"});
+        }
+    };
+
+    static updateProfile = async (req, res) => {
+        const {location, bio, skills, education, workHistory, availability} = req.body;
+
+        try {
+            const {id} = req.params
+            let profile = await Profile.findOne({user: id});
+            if (!profile) {
+                return res.status(404).json({message: "Profile not found"});
+            }
+
+            profile.location = location || profile.location;
+            profile.bio = bio || profile.bio;
+            profile.skills = skills || profile.skills;
+            profile.education = education || profile.education;
+            profile.workHistory = workHistory || profile.workHistory;
+            profile.availability = availability || profile.availability;
+
+            await profile.save();
+            res.json(profile);
+        } catch (error) {
+            res.status(500).json({message: "Server error"});
         }
     };
 
