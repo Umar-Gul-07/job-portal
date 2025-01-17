@@ -7,9 +7,14 @@ import bcrypt from 'bcrypt';
 
 class UserController {
 
+    import
+    Profile
+    from
+    '../models/Profile.js';
+
     static register = async (req, res, next) => {
         try {
-            console.log(req.body)
+            console.log(req.body);
             const {
                 firstName,
                 lastName,
@@ -22,7 +27,7 @@ class UserController {
                 country,
                 area,
                 organization,
-                backgroundChecks
+                backgroundChecks,
             } = req.body;
 
             // Check if email already exists in the database
@@ -32,7 +37,7 @@ class UserController {
             }
 
             // Hash the password using bcrypt
-            const hashedPassword = await bcrypt.hash(password, 10);  // 10 is the salt rounds
+            const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
 
             // Create a new user with the hashed password
             const newUser = new user({
@@ -51,15 +56,30 @@ class UserController {
             });
 
             // Save the user to the database
-            await newUser.save();
+            const savedUser = await newUser.save();
+
+            // Create a new profile associated with the user
+            const newProfile = new Profile({
+                user: savedUser._id, // Set user ID
+                location: null,
+                bio: null,
+                skills: [],
+                education: [],
+                workHistory: [],
+                availability: {availableDays: []},
+                profilePicture: null,
+            });
+
+            // Save the profile to the database
+            await newProfile.save();
 
             // Respond with success message
-            res.status(201).json({message: "User registered successfully", user: newUser});
+            res.status(201).json({message: "User registered successfully", user: savedUser});
         } catch (error) {
             // Handle errors
             res.status(500).json({message: error.message});
         }
-    }
+    };
 
     static getUserById = async (req, res, next) => {
         try {
@@ -127,38 +147,40 @@ class UserController {
         }
     };
 
-    static updateProfile = async (req, res) => {
-        const {location, bio, skills, education, workHistory, availability} = req.body;
+   static updateProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { location, bio, skills, education, workHistory, availability } = req.body;
 
-        try {
-            const {id} = req.params;
-            const profile = await Profile.findOne({user: id});
-
-            if (!profile) {
-                return res.status(404).json({message: "Profile not found"});
-            }
-
-            // Update fields
-            profile.location = location || profile.location;
-            profile.bio = bio || profile.bio;
-            profile.skills = skills || profile.skills;
-            profile.education = education || profile.education;
-            profile.workHistory = workHistory || profile.workHistory;
-            profile.availability = availability || profile.availability;
-
-            // Handle profile picture upload
-            if (req.file) {
-                const profilePictureUrl = `/uploads/${req.file.filename}`; // Adjust path as needed
-                profile.profilePicture = profilePictureUrl;
-            }
-
-            await profile.save();
-            res.json({message: "Profile updated successfully", profile});
-        } catch (error) {
-            console.error("Error updating profile:", error);
-            res.status(500).json({message: "Server error"});
+        // Find the profile by user ID
+        const profile = await Profile.findOne({ user: id });
+        if (!profile) {
+            return res.status(404).json({ message: "Profile not found" });
         }
-    };
+
+        // Update profile fields with a fallback to existing data
+        Object.assign(profile, {
+            location: location || profile.location,
+            bio: bio || profile.bio,
+            skills: skills ? JSON.parse(skills) : profile.skills,
+            education: education ? JSON.parse(education) : profile.education,
+            workHistory: workHistory ? JSON.parse(workHistory) : profile.workHistory,
+            availability: availability ? JSON.parse(availability) : profile.availability,
+        });
+
+        // Handle profile picture upload
+        if (req.file) {
+            profile.profilePicture = `/uploads/${req.file.filename}`;
+        }
+
+        // Save the updated profile
+        await profile.save();
+        res.status(200).json({ message: "Profile updated successfully", profile });
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({ message: "An error occurred while updating the profile" });
+    }
+};
 
 
     static getAllUsers = async (req, res, next) => {

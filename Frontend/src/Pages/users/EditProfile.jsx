@@ -5,10 +5,13 @@ import api from "../../Utils/Axios";
 import {toast} from "react-toastify";
 import {Helmet} from "react-helmet";
 import {Store} from "Utils/Store";
+import Header from "./Header";
+import {useNavigate} from "react-router-dom";
 
 export default function EditProfilePage() {
     const {state} = useContext(Store);
     const {UserInfo} = state;
+    const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
         location: "",
@@ -71,6 +74,7 @@ export default function EditProfilePage() {
                 headers: {"Content-Type": "multipart/form-data"},
             });
             toast.success("Profile updated successfully!");
+            navigate("/user-profile")
         } catch (error) {
             console.error(error);
             toast.error("Failed to update profile");
@@ -78,7 +82,7 @@ export default function EditProfilePage() {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="mx-auto text-success">Loading...</div>;
     }
 
     const handleNestedChange = (e, index, field, section) => {
@@ -101,6 +105,7 @@ export default function EditProfilePage() {
     return (
         <>
             <Helmet><title>Edit Profile</title></Helmet>
+            <Header/>
             <div className="mx-auto p-8 bg-white rounded-xl" style={{width: "70%"}}>
                 <h1 className="text-2xl font-semibold text-center mb-8">Edit Profile</h1>
                 <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-4 gap-y-3">
@@ -115,7 +120,7 @@ export default function EditProfilePage() {
                         />
                         {previewImage && (
                             <img
-                                src={previewImage}
+                                src={`http://localhost:800${previewImage}`}
                                 alt="Profile Preview"
                                 className="mt-2 w-24 h-24 object-cover rounded-full"
                             />
