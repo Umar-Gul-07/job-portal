@@ -10,6 +10,7 @@ import api from "../../Utils/Axios";
 
 // Job Card Component
 const JobCard = ({
+                     _id,
                      title,
                      schoolName,
                      coverFrom,
@@ -33,6 +34,7 @@ const JobCard = ({
         }}
         state={{
             job: {
+                _id,
                 title,
                 schoolName,
                 coverFrom,

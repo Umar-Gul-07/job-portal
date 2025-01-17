@@ -10,6 +10,7 @@ router.get('/get_user_by_id/:id', UserController.getUserById);
 router.get('/get_all_information', UserController.get_all_information);
 router.get('/get_user_profile/:id', UserController.getProfile);
 router.post('/register', emailAndPasswordValidation, validate, UserController.register);
+router.post('/apply-job', UserController.jobApplied);
 router.put('/update_user_by_id/:id', UserController.updateUserById);
 router.put('/update_user_profile/:id', upload.single('profilePicture'), UserController.updateProfile);
 router.delete('/delete/:id', UserController.deleteDocById);

@@ -1,16 +1,22 @@
-import React, {useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
-import {Avatar, AvatarFallback, AvatarImage} from "../../components/ui/avatar";
-import {Button} from "../../components/ui/button";
-import {Card} from "../../components/ui/card";
+import React, { useContext, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
 import Header from "./Header";
+import { Store } from "../../Utils/Store";
+import api from "../../Utils/Axios";
+import {toast} from "react-toastify";
 
 const JobDetail = () => {
+    const { state } = useContext(Store);
+    const { UserInfo } = state;
     const location = useLocation();
-    console.log(location)
     const [job, setJob] = useState(location.state?.job || null);
     const [loading, setLoading] = useState(false);
-
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
+    console.log(job)
     if (loading) {
         return <p>Loading job details...</p>;
     }
@@ -19,15 +25,39 @@ const JobDetail = () => {
         return <p>Job details not found.</p>;
     }
 
+    // Handle Apply Job
+    const handleApplyJob = async (e) => {
+        e.preventDefault()
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            // Make Axios request to apply for the job
+            const response = await api.post('/user/apply-job', {
+                user_id: UserInfo.id, // Send the user ID from context
+                job_id: job._id, // Send the job ID
+            });
+
+                setSuccess(true);
+                toast.success("Applied SuccessFully")
+
+        } catch (err) {
+            setError(err.response?.data?.error || "Something went wrong. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="flex h-screen flex-col bg-gray-50">
             {/* Navigation */}
-            <Header/>
+            <Header />
             {/* Main Content */}
             <main className="flex-1 overflow-auto p-6">
                 <div className="mx-auto max-w-4xl space-y-8">
                     {/* Job Header Card */}
-                    <Card className="bg-[#f7fcfc] p-4 shadow-sm border-gray-200" style={{width: "100%"}}>
+                    <Card className="bg-[#f7fcfc] p-4 shadow-sm border-gray-200" style={{ width: "100%" }}>
                         <div className="flex gap-4">
                             <div className="h-16 w-16 flex-shrink-0">
                                 <Avatar>
@@ -49,7 +79,9 @@ const JobDetail = () => {
                             </div>
                         </div>
                     </Card>
-
+  {/* Success/Error Messages */}
+                    {success && <p className="text-green-500 text-center">You have successfully applied for this job!</p>}
+                    {error && <p className="text-red-500 text-center">{error}</p>}
                     {/* Details Card */}
                     <Card className="bg-[#f7fcfc] p-4 border-gray-200">
                         {/* Date and Time Details */}
@@ -111,10 +143,16 @@ const JobDetail = () => {
 
                     {/* Apply Button */}
                     <div className="flex justify-center">
-                        <Button className="w-[400px] bg-[#2B8A0E] hover:bg-[#247A0C] text-white py-2 rounded-md">
-                            Apply for the Job
+                        <Button
+                            className="w-[400px] bg-[#2B8A0E] hover:bg-[#247A0C] text-white py-2 rounded-md"
+                            onClick={handleApplyJob} // Trigger job application on click
+                            disabled={loading}
+                        >
+                            {loading ? 'Applying...' : 'Apply for the Job'}
                         </Button>
                     </div>
+
+
 
                     {/* Payment Options */}
                     <div className="space-y-4 pt-2">

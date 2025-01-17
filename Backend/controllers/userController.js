@@ -2,6 +2,7 @@
 import Payment from "../models/paymentModel.js";
 import user from "../models/userModel.js";
 import Profile from "../models/profileModel.js";
+import JobApplied from "../models/appliedJob.js"
 import createError from "../utils/error.js";
 import bcrypt from 'bcrypt';
 
@@ -147,41 +148,40 @@ class UserController {
         }
     };
 
-   static updateProfile = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { location, bio, skills, education, workHistory, availability } = req.body;
+    static updateProfile = async (req, res) => {
+        try {
+            const {id} = req.params;
+            const {location, bio, skills, education, workHistory, availability} = req.body;
 
-        // Find the profile by user ID
-        const profile = await Profile.findOne({ user: id });
-        if (!profile) {
-            return res.status(404).json({ message: "Profile not found" });
+            // Find the profile by user ID
+            const profile = await Profile.findOne({user: id});
+            if (!profile) {
+                return res.status(404).json({message: "Profile not found"});
+            }
+
+            // Update profile fields with a fallback to existing data
+            Object.assign(profile, {
+                location: location || profile.location,
+                bio: bio || profile.bio,
+                skills: skills ? JSON.parse(skills) : profile.skills,
+                education: education ? JSON.parse(education) : profile.education,
+                workHistory: workHistory ? JSON.parse(workHistory) : profile.workHistory,
+                availability: availability ? JSON.parse(availability) : profile.availability,
+            });
+
+            // Handle profile picture upload
+            if (req.file) {
+                profile.profilePicture = `/uploads/${req.file.filename}`;
+            }
+
+            // Save the updated profile
+            await profile.save();
+            res.status(200).json({message: "Profile updated successfully", profile});
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            res.status(500).json({message: "An error occurred while updating the profile"});
         }
-
-        // Update profile fields with a fallback to existing data
-        Object.assign(profile, {
-            location: location || profile.location,
-            bio: bio || profile.bio,
-            skills: skills ? JSON.parse(skills) : profile.skills,
-            education: education ? JSON.parse(education) : profile.education,
-            workHistory: workHistory ? JSON.parse(workHistory) : profile.workHistory,
-            availability: availability ? JSON.parse(availability) : profile.availability,
-        });
-
-        // Handle profile picture upload
-        if (req.file) {
-            profile.profilePicture = `/uploads/${req.file.filename}`;
-        }
-
-        // Save the updated profile
-        await profile.save();
-        res.status(200).json({ message: "Profile updated successfully", profile });
-    } catch (error) {
-        console.error("Error updating profile:", error);
-        res.status(500).json({ message: "An error occurred while updating the profile" });
-    }
-};
-
+    };
 
     static getAllUsers = async (req, res, next) => {
         try {
@@ -197,7 +197,6 @@ class UserController {
         }
     };
 
-    //delete user==========================================
     static deleteDocById = async (req, res, next) => {
         try {
             const result = await user.findByIdAndDelete(req.params.id);
@@ -212,8 +211,6 @@ class UserController {
         }
     };
 
-
-    //========================================================
     static get_all_information = async (req, res) => {
         try {
             const users = await user.find();
@@ -233,6 +230,38 @@ class UserController {
             });
         }
     };
+
+    static jobApplied = async (req, res) => {
+        const {user_id, job_id} = req.body;
+
+        try {
+            // Check if user_id and job_id are provided
+            if (!user_id || !job_id) {
+                return res.status(400).json({error: 'User ID and Job ID are required'});
+            }
+
+            // Check if the user has already applied for this job
+            const existingApplication = await JobApplied.findOne({user: user_id, job: job_id});
+
+            if (existingApplication) {
+                return res.status(400).json({error: 'You have already applied for this job'});
+            }
+
+            // Create a new job application if not already applied
+            const jobApplied = new JobApplied({
+                user: user_id,
+                job: job_id
+            });
+
+            // Save the job application to the database
+            await jobApplied.save();
+
+            return res.status(201).json({message: 'Job application created successfully', jobApplied});
+        } catch (error) {
+            return res.status(500).json({error: error.message});
+        }
+    };
+
 
 }
 
