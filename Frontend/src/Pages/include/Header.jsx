@@ -49,14 +49,19 @@ function Header() {
                     <strong>Pricing</strong>
                 </ScrollLink>
             </div>
-            {UserInfo ?
+            {UserInfo && UserInfo.isUser ?
                 <Link to="/user/job-listing">
                     <button
                         className="bg-[#ffcc00] text-white px-6 py-2 rounded-md hover:bg-[#ffcc00] transition-colors">
                         <strong>Dashboard</strong>
                     </button>
                 </Link>
-                : <Link to="/login-choice">
+                : UserInfo && UserInfo.isHire ? <Link to="/school-jobs">
+                    <button
+                        className="bg-[#ffcc00] text-white px-6 py-2 rounded-md hover:bg-[#ffcc00] transition-colors">
+                        <strong>Dashboard</strong>
+                    </button>
+                </Link> : <Link to="/login-choice">
                     <button
                         className="bg-[#2B7A0B] text-white px-6 py-2 rounded-md hover:bg-[#236508] transition-colors">
                         <strong>Login</strong>

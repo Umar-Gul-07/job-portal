@@ -1,5 +1,6 @@
 import {School} from "../models/schoolModel.js";
 import Job from "../models/jobModel.js";
+import JobApplied from "../models/appliedJob.js";
 
 class schoolController {
     static register = async (req, res) => {
@@ -98,6 +99,20 @@ class schoolController {
                 return res.status(404).json({message: "No jobs found"});
             }
 
+            res.status(200).json(jobs);
+        } catch (error) {
+            console.error("Error fetching jobs:", error);
+            res.status(500).json({message: "Internal server error", error: error.message});
+        }
+    };
+
+     static getappliedcandidate = async (req, res) => {
+        try {
+            const jobs = await JobApplied.find({});
+
+            if (!jobs || jobs.length === 0) {
+                return res.status(404).json({message: "No applied candidate found"});
+            }
             res.status(200).json(jobs);
         } catch (error) {
             console.error("Error fetching jobs:", error);

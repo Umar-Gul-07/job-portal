@@ -29,6 +29,7 @@ const login = async (req, res, next) => {
                 lastName: existingUser.lastName,
                 email: existingUser.email,
                 phone: existingUser.phone,
+                isUser:existingUser.isUser,
             },
             token: token
         });
@@ -60,10 +61,12 @@ const schoollogin = async (req, res, next) => {
             message: "Login successful",
             user: {
                 id: existingUser._id,
+                schoolName: existingUser.schoolName,
                 firstName: existingUser.firstName,
                 lastName: existingUser.lastName,
                 email: existingUser.email,
                 phone: existingUser.phone,
+                isHire:existingUser.isHire
             },
             token: token
         });

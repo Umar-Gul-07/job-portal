@@ -153,32 +153,32 @@ export default function JobListings() {
 
                 </div>
 
-                <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-2 rounded-xl bg-white border border-[#D3E0F3]">
-                        <Input
-                            className="flex-1 border-0 bg-transparent text-sm focus-visible:ring-0 px-0 h-8"
-                            placeholder="Type here"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                        />
-                        <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-transparent">
-                                <Paperclip className="h-5 w-5 text-gray-500"/>
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-transparent">
-                                <Mic className="h-5 w-5 text-gray-500"/>
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <Send className="h-5 w-5"/>
-                            </Button>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4 mb-7">
-                        <InfoCard title="Parkhouse High" createdOn="24-08-24" lastUpdated="13-04-24"/>
-                        <InfoCard title="Doha"/>
-                        <InfoCard/>
-                    </div>
-                </div>
+                {/*<div className="space-y-4">*/}
+                {/*    <div className="flex items-center gap-4 p-2 rounded-xl bg-white border border-[#D3E0F3]">*/}
+                {/*        <Input*/}
+                {/*            className="flex-1 border-0 bg-transparent text-sm focus-visible:ring-0 px-0 h-8"*/}
+                {/*            placeholder="Type here"*/}
+                {/*            value={message}*/}
+                {/*            onChange={(e) => setMessage(e.target.value)}*/}
+                {/*        />*/}
+                {/*        <div className="flex items-center gap-1">*/}
+                {/*            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-transparent">*/}
+                {/*                <Paperclip className="h-5 w-5 text-gray-500"/>*/}
+                {/*            </Button>*/}
+                {/*            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-transparent">*/}
+                {/*                <Mic className="h-5 w-5 text-gray-500"/>*/}
+                {/*            </Button>*/}
+                {/*            <Button variant="ghost" size="icon" className="h-8 w-8">*/}
+                {/*                <Send className="h-5 w-5"/>*/}
+                {/*            </Button>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*    <div className="grid grid-cols-3 gap-4 mb-7">*/}
+                {/*        <InfoCard title="Parkhouse High" createdOn="24-08-24" lastUpdated="13-04-24"/>*/}
+                {/*        <InfoCard title="Doha"/>*/}
+                {/*        <InfoCard/>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </main>
         </div>
     );

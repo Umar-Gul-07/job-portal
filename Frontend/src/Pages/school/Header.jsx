@@ -18,15 +18,22 @@ const Header = () => {
         <>
             <header className="flex items-center justify-between border-b bg-[#ECF0FA] px-4 sm:px-6 py-4">
                 <Avatar className="h-11 w-11">
-                    <AvatarImage src="/placeholder.svg"/>
-                    <AvatarFallback>Logo</AvatarFallback>
+                    <div className="w-12 h-12 bg-gray-200 rounded-full">
+                        <img
+                            src="/logo.jpg"
+                            alt="Parkhouse English School"
+                            width={64}
+                            height={64}
+                            className="h-full w-full rounded-full object-cover"
+                        />
+                    </div>
                 </Avatar>
                 <nav className="hidden md:flex space-x-4 lg:space-x-8">
                     <Link to="/">
-                    <Button variant="ghost">Home</Button>
+                        <Button variant="ghost">Home</Button>
                     </Link>
                     <Link to="/school-jobs">
-                    <Button variant="ghost">Jobs</Button>
+                        <Button variant="ghost">Jobs</Button>
                     </Link>
                     <Link to="/school-profile">
                     <Button variant="ghost">Profile</Button>

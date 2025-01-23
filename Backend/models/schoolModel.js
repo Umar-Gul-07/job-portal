@@ -2,17 +2,21 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt"; // To hash passwords
 
 const SchoolSchema = new mongoose.Schema({
-    schoolName: { type: String, required: true },
-    country: { type: String, required: true },
-    area: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    role: { type: String, required: true }, // e.g., Principal
-    password: { type: String, required: true }, // Password field
-    fee: { type: Number, default: 399 }, // Default monthly fee
-}, { timestamps: true });
+    schoolName: {type: String, required: true},
+    country: {type: String, required: true},
+    area: {type: String, required: true},
+    email: {type: String, required: true, unique: true},
+    phone: {type: String, required: true},
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
+    role: {type: String, required: true},
+    password: {type: String, required: true},
+    fee: {type: Number, default: 399},
+    isHire: {
+        type: Boolean,
+        default: true,
+    },
+}, {timestamps: true});
 
 // Pre-save hook to hash password before saving
 SchoolSchema.pre('save', async function (next) {
@@ -30,4 +34,4 @@ SchoolSchema.pre('save', async function (next) {
 
 const School = mongoose.model('School', SchoolSchema);
 
-export { School };
+export {School};

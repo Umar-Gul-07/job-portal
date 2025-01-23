@@ -15,7 +15,6 @@ class UserController {
 
     static register = async (req, res, next) => {
         try {
-            console.log(req.body);
             const {
                 firstName,
                 lastName,
@@ -54,6 +53,7 @@ class UserController {
                 area,
                 organization,
                 backgroundChecks,
+                isUser: true,
             });
 
             // Save the user to the database
@@ -74,8 +74,18 @@ class UserController {
             // Save the profile to the database
             await newProfile.save();
 
-            // Respond with success message
-            res.status(201).json({message: "User registered successfully", user: savedUser});
+            // Customize the user response
+            const userResponse = {
+                _id: savedUser._id,
+                firstName: savedUser.firstName,
+                lastName: savedUser.lastName,
+                email: savedUser.email,
+
+            };
+
+
+            // Respond with success message and the customized user data
+            res.status(201).json({message: "User registered successfully", user: userResponse});
         } catch (error) {
             // Handle errors
             res.status(500).json({message: error.message});

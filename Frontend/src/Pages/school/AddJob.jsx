@@ -62,7 +62,7 @@ export default function AddJob() {
     return (
         <>
             <Header />
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center mt-5 mb-5">
                 <div className="w-full bg-white max-w-5xl p-6">
                     <h1 className="text-2xl font-bold text-center mb-8">Add a New Job</h1>
 

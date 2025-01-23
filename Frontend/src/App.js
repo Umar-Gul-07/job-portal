@@ -22,6 +22,7 @@ import JobsAppliedList from "./Pages/school/JobsAppliedList";
 import SchoolSettings from "./Pages/school/SchoolSetting";
 import AddJob from "./Pages/school/AddJob";
 import EditProfilePage from "./Pages/users/EditProfile";
+import Protected from "./Security/Protected";
 
 
 function App() {
@@ -42,14 +43,14 @@ function App() {
 
                     {/* User Routes */}
                     <Route path='/user-registration' element={<UserRegistrationForm/>}/>
-                    <Route path='/user-profile' element={<Profile/>}/>
-                    <Route path='/user-chat' element={<UserChat/>}/>
-                    <Route path='/user/job-listing' element={<JobListings/>}/>
-                    <Route path='/user/job-search' element={<JobSearch/>}/>
-                    <Route path='/user/job-detail' element={<JobDetail/>}/>
-                    <Route path='/user/notification' element={<Notifications/>}/>
-                    <Route path='/user/settings/update' element={<UserSettingUpdateForm/>}/>
-                    <Route path='/user/profile-update' element={<EditProfilePage/>}/>
+                    <Route path='/user-profile' element={<Protected><Profile/></Protected>}/>
+                    <Route path='/user-chat' element={<Protected><UserChat/></Protected>}/>
+                    <Route path='/user/job-listing' element={<Protected><JobListings/></Protected>}/>
+                    <Route path='/user/job-search' element={<Protected><JobSearch/></Protected>}/>
+                    <Route path='/user/job-detail' element={<Protected><JobDetail/></Protected>}/>
+                    <Route path='/user/notification' element={<Protected><Notifications/></Protected>}/>
+                    <Route path='/user/settings/update' element={<Protected><UserSettingUpdateForm/></Protected>}/>
+                    <Route path='/user/profile-update' element={<Protected><EditProfilePage/></Protected>}/>
 
                     {/* User Routes */}
                     <Route path='/school-registration' element={<SchoolRegistration/>}/>
