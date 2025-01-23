@@ -207,6 +207,20 @@ class UserController {
         }
     };
 
+    static getAllProfiles= async (req, res, next) => {
+        try {
+            const result = await Profile.find()
+
+            if (!result || result.length === 0) {
+                return res.status(404).json({message: "Sorry, no profiles is available."});
+            }
+            res.status(200).json(result);
+        } catch (err) {
+            console.error('Error in getAllProfiles:', err); // Log errors
+            next(createError(500, 'Internal Server Error'));
+        }
+    };
+
     static deleteDocById = async (req, res, next) => {
         try {
             const result = await user.findByIdAndDelete(req.params.id);

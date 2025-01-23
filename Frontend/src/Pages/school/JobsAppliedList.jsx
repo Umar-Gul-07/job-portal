@@ -1,5 +1,8 @@
-import React from 'react'
+import React, {useContext, useEffect, useState} from 'react';
 import Header from "./Header";
+import {useLocation, useParams} from "react-router-dom";
+import api from "../../Utils/Axios";
+import {Store} from "../../Utils/Store";
 
 function ProfileCard({
                          name = "Anne Hathaway",
@@ -13,7 +16,7 @@ function ProfileCard({
         <div className="flex items-center justify-between py-4 px-6 rounded-lg drop-shadow-sm bg-white w-full">
             <div className="flex items-start gap-4">
                 <img
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-12-21%20234547-10D5DLrL80fLYA5En2D0XV5JInFFWv.png"
+                    src={imageUrl}
                     alt={name}
                     className="w-20 h-20 rounded-full object-cover"
                 />
@@ -44,32 +47,71 @@ function ProfileCard({
                 Select
             </button>
         </div>
-    )
+    );
 }
 
-// Mock data for multiple profiles
-const profiles = Array(4).fill({
-    name: "Anne Hathaway",
-    imageUrl: "/placeholder.svg",
-    availability: "Yes",
-    dateFrom: "24/11/2024",
-    dateTo: "24/12/2024",
-    jobsCompleted: 160
-})
-
 export default function JobsAppliedList() {
+    const {state} = useContext(Store);
+    const {UserInfo} = state;
+    const [appliedCandidate, setAppliedCandidate] = useState([]); // Applied candidates data
+    const [userProfiles, setUserProfiles] = useState([]); // User profiles data
+    const {jobId} = useParams() // Get jobId from location state
+
+    useEffect(() => {
+        const fetchAppliedCandidates = async () => {
+            try {
+                const response = await api.get("/school/get/applied-candidate");
+                setAppliedCandidate(response.data || []);
+            } catch (error) {
+                console.error("Error fetching applied candidates:", error);
+            }
+        };
+
+        fetchAppliedCandidates();
+
+        const fetchAllProfiles = async () => {
+            try {
+                // Fetch all user profiles
+                const response = await api.get("/user/get_user_profile");
+                setUserProfiles(response.data || []);
+                console.log(userProfiles)
+            } catch (error) {
+                console.error("Error fetching user profiles:", error);
+            }
+        };
+
+        // Fetch applied candidates and profiles when the component mounts or jobId changes
+        if (jobId) {
+            fetchAppliedCandidates();
+        }
+        fetchAllProfiles();
+    }, [jobId, UserInfo.id]); // Re-fetch if jobId or UserInfo.id changes
+
+    // Filter user profiles based on applied candidates
+    const filteredProfiles = userProfiles.filter(profile =>
+        appliedCandidate.some(candidate => candidate.userId === profile._id)
+    );
+    console.log(appliedCandidate)
     return (
         <>
             <Header/>
             <div className="min-h-screen bg-white">
                 <div className="max-w-5xl mx-auto p-8">
                     <div className="space-y-7">
-                        {profiles.map((profile, index) => (
-                            <ProfileCard key={index} {...profile} />
-                        ))}
+                        {filteredProfiles.length > 0 ? (
+                            filteredProfiles.map((profile, index) => (
+                                <ProfileCard key={index} {...profile} />
+                            ))
+                        ) : (
+                            <div className="flex items-center justify-center min-h-screen bg-white">
+                                <p className="text-red-600 text-xl font-semibold">No candidates have applied for this
+                                    job yet.</p>
+                            </div>
+
+                        )}
                     </div>
                 </div>
             </div>
         </>
-    )
+    );
 }

@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/get_all_users', UserController.getAllUsers);
 router.get('/get_user_by_id/:id', UserController.getUserById);
 router.get('/get_all_information', UserController.get_all_information);
+router.get('/get_user_profile', UserController.getAllProfiles);
 router.get('/get_user_profile/:id', UserController.getProfile);
 router.post('/register', emailAndPasswordValidation, validate, UserController.register);
 router.post('/apply-job', UserController.jobApplied);

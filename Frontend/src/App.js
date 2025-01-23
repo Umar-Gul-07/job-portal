@@ -23,6 +23,7 @@ import SchoolSettings from "./Pages/school/SchoolSetting";
 import AddJob from "./Pages/school/AddJob";
 import EditProfilePage from "./Pages/users/EditProfile";
 import Protected from "./Security/Protected";
+import SchoolProtected from "./Security/SchoolProtected";
 
 
 function App() {
@@ -55,12 +56,13 @@ function App() {
                     {/* User Routes */}
                     <Route path='/school-registration' element={<SchoolRegistration/>}/>
                     <Route path='/school-login' element={<SchoolLogin/>}/>
-                    <Route path='/school-jobs' element={<SchoolJobs/>}/>
-                    <Route path='/school-profile' element={<SchoolProfile/>}/>
-                    <Route path='/school-settings' element={<SchoolSettings/>}/>
-                    <Route path='/school-jobs-applicant' element={<JobApplicantList/>}/>
-                    <Route path='/school-jobs-applied' element={<JobsAppliedList/>}/>
-                    <Route path='/school-add-job' element={<AddJob/>}/>
+                    <Route path='/school-jobs' element={<SchoolProtected><SchoolJobs/></SchoolProtected>}/>
+                    <Route path='/school-profile' element={<SchoolProtected><SchoolProfile/></SchoolProtected>}/>
+                    <Route path='/school-settings' element={<SchoolProtected><SchoolSettings/></SchoolProtected>}/>
+                    <Route path='/school-jobs-applicant'
+                           element={<SchoolProtected><JobApplicantList/></SchoolProtected>}/>
+                    <Route path='/school-jobs-applied/:jobId' element={<SchoolProtected><JobsAppliedList/></SchoolProtected>}/>
+                    <Route path='/school-add-job' element={<SchoolProtected><AddJob/></SchoolProtected>}/>
 
 
                     <Route path='*' element={<PageNotFound404/>}/>
