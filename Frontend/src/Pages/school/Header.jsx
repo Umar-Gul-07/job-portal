@@ -35,9 +35,9 @@ const Header = () => {
                     <Link to="/school-jobs">
                         <Button variant="ghost">Jobs</Button>
                     </Link>
-                    <Link to="/school-profile">
-                    <Button variant="ghost">Profile</Button>
-                    </Link>
+                    {/*<Link to="/school-profile">*/}
+                    {/*<Button variant="ghost">Profile</Button>*/}
+                    {/*</Link>*/}
                     <Link to="/school-settings">
                     <Button variant="ghost">Settings</Button>
                     </Link>

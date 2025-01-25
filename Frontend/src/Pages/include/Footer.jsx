@@ -6,7 +6,15 @@ const Footer = () => {
       <div className="container mx-auto flex justify-between items-start">
         {/* Left Section */}
         <div className="flex items-start">
-          <div className="w-16 h-16 bg-gray-300 rounded-full"></div>
+          <div className="w-16 h-16 bg-gray-300 rounded-full">
+            <img
+                src="/logo.jpg"
+                alt="Parkhouse English School"
+                width={64}
+                height={64}
+                className="h-full w-full rounded-full object-cover"
+            />
+          </div>
           <ul className="ml-4 space-y-2">
             <li><a href="#" className="hover:underline">Home</a></li>
             <li><a href="#" className="hover:underline">About Us</a></li>

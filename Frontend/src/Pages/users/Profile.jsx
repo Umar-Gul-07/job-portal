@@ -41,7 +41,8 @@ export default function Profile() {
     };
 
     if (loading) {
-        return <p>Loading profile...</p>;
+        return <p className="text-yellow-600 text-xl font-semibold text-center" style={{marginLeft:"center"}}>.........Loading........</p>
+
     }
 
     if (error) {

@@ -27,7 +27,6 @@ export default function Login() {
             const response = await api.post('/auth/login', formData)
             toast.success("User Logged In")
             const user = response.data.user;
-            console.log(user)
             dispatch({type: "UserLoggedIn", payload: user});
             navigate("/user/job-listing")
         } catch (error) {

@@ -82,7 +82,7 @@ export default function EditProfilePage() {
     };
 
     if (loading) {
-        return <div className="mx-auto text-success">Loading...</div>;
+        return <p className="text-yellow-600 text-xl font-semibold text-center" style={{marginLeft:"center"}}>.........Loading........</p>
     }
 
     const handleNestedChange = (e, index, field, section) => {

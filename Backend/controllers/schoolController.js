@@ -91,6 +91,45 @@ class schoolController {
         }
     };
 
+    static update = async (req, res) => {
+        const {schoolName, country, area, email, phone, firstName, lastName, role, password} = req.body;
+        const schoolId = req.params.id;
+        try {
+            const school = await School.findById(schoolId);
+            if (!school) {
+                return res.status(404).json({error: "School not found."});
+            }
+
+            school.schoolName = schoolName || school.schoolName;
+            school.country = country || school.country;
+            school.area = area || school.area;
+            school.email = email || school.email;
+            school.phone = phone || school.phone;
+            school.firstName = firstName || school.firstName;
+            school.lastName = lastName || school.lastName;
+            school.role = role || school.role;
+            if (password) {  // If password is provided, hash and update it
+                const salt = await bcrypt.genSalt(10);
+                school.password = await bcrypt.hash(password, salt);
+            }
+
+            await school.save();
+            res.status(200).json({message: "School updated successfully!",  user: {
+                id: school._id,
+                schoolName: school.schoolName,
+                firstName: school.firstName,
+                lastName: school.lastName,
+                email: school.email,
+                phone: school.phone,
+                country:school.country,
+                area:school.area,
+                role:school.role,
+                isHire:school.isHire,
+            },});
+        } catch (error) {
+            res.status(500).json({error: "Server error"});
+        }
+    };
     static getJob = async (req, res) => {
         try {
             const jobs = await Job.find({}); // Replace `Job` with your Mongoose model name
@@ -106,7 +145,7 @@ class schoolController {
         }
     };
 
-     static getappliedcandidate = async (req, res) => {
+    static getappliedcandidate = async (req, res) => {
         try {
             const jobs = await JobApplied.find({});
 

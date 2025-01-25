@@ -66,6 +66,9 @@ const schoollogin = async (req, res, next) => {
                 lastName: existingUser.lastName,
                 email: existingUser.email,
                 phone: existingUser.phone,
+                country:existingUser.country,
+                area:existingUser.area,
+                role:existingUser.role,
                 isHire:existingUser.isHire
             },
             token: token
@@ -75,6 +78,8 @@ const schoollogin = async (req, res, next) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
 
 // Example of a function to generate a JWT token
 

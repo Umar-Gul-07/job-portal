@@ -1,17 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Header from "./Header";
-import {useLocation, useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import api from "../../Utils/Axios";
-import {Store} from "../../Utils/Store";
+import { Store } from "../../Utils/Store";
 
 function ProfileCard({
-                         name = "Anne Hathaway",
-                         imageUrl = "/placeholder.svg",
-                         availability = "Yes",
-                         dateFrom = "24/11/2024",
-                         dateTo = "24/12/2024",
-                         jobsCompleted = 160
-                     }) {
+    name = "Anne Hathaway",
+    imageUrl = "/placeholder.svg",
+    availability = "Yes",
+    dateFrom = "24/11/2024",
+    dateTo = "24/12/2024",
+    jobsCompleted = 160
+}) {
     return (
         <div className="flex items-center justify-between py-4 px-6 rounded-lg drop-shadow-sm bg-white w-full">
             <div className="flex items-start gap-4">
@@ -51,50 +51,53 @@ function ProfileCard({
 }
 
 export default function JobsAppliedList() {
-    const {state} = useContext(Store);
-    const {UserInfo} = state;
+    const { state } = useContext(Store);
+    const { UserInfo } = state;
     const [appliedCandidate, setAppliedCandidate] = useState([]); // Applied candidates data
     const [userProfiles, setUserProfiles] = useState([]); // User profiles data
-    const {jobId} = useParams() // Get jobId from location state
+    const { jobId } = useParams(); // Getting jobId from the URL params
 
     useEffect(() => {
         const fetchAppliedCandidates = async () => {
             try {
-                const response = await api.get("/school/get/applied-candidate");
+                // Fetch all candidates who applied for any job
+                const response = await api.get(`/school/get/applied-candidate`);
                 setAppliedCandidate(response.data || []);
             } catch (error) {
                 console.error("Error fetching applied candidates:", error);
             }
         };
 
-        fetchAppliedCandidates();
-
         const fetchAllProfiles = async () => {
             try {
                 // Fetch all user profiles
                 const response = await api.get("/user/get_user_profile");
                 setUserProfiles(response.data || []);
-                console.log(userProfiles)
             } catch (error) {
                 console.error("Error fetching user profiles:", error);
             }
         };
 
-        // Fetch applied candidates and profiles when the component mounts or jobId changes
-        if (jobId) {
-            fetchAppliedCandidates();
-        }
+        // Fetch applied candidates and profiles when the component mounts
+        fetchAppliedCandidates();
         fetchAllProfiles();
-    }, [jobId, UserInfo.id]); // Re-fetch if jobId or UserInfo.id changes
+    }, [UserInfo.id]); // Only re-fetch if UserInfo.id changes
 
-    // Filter user profiles based on applied candidates
+    // Filter `appliedCandidate` to include only those for the current job
+    const candidatesForJob = appliedCandidate.filter(candidate => candidate.job === jobId);
+
+    console.log("Filtered Candidates for Job:", candidatesForJob);
+
+    // Filter `userProfiles` based on filtered `candidatesForJob`
     const filteredProfiles = userProfiles.filter(profile =>
-        appliedCandidate.some(candidate => candidate.userId === profile._id)
+        candidatesForJob.some(candidate => candidate.user === profile._id)
     );
-    console.log(appliedCandidate)
+
+    console.log("Filtered User Profiles:", filteredProfiles);
+
     return (
         <>
-            <Header/>
+            <Header />
             <div className="min-h-screen bg-white">
                 <div className="max-w-5xl mx-auto p-8">
                     <div className="space-y-7">
@@ -107,7 +110,6 @@ export default function JobsAppliedList() {
                                 <p className="text-red-600 text-xl font-semibold">No candidates have applied for this
                                     job yet.</p>
                             </div>
-
                         )}
                     </div>
                 </div>
