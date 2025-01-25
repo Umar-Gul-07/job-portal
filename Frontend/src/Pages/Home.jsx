@@ -1,6 +1,6 @@
-import {Helmet} from "react-helmet";
-import {ChevronLeft, ChevronRight, Search} from "lucide-react";
-import React, {useState, useEffect} from "react";
+import { Helmet } from "react-helmet";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import JobsNearBy from "./include/Jobs-Near-By";
 import WhyChooseUs from "./include/Why-Choose-Should-Us";
 import Blog from "./Blog";
@@ -38,6 +38,14 @@ function Home() {
         };
 
         fetchJobs();
+
+        // Automatically change the image every 5 seconds
+        const imageChangeInterval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % images.length);
+        }, 5000); // Change image every 5 seconds
+
+        // Clear the interval when the component unmounts
+        return () => clearInterval(imageChangeInterval);
     }, []);
 
     const handleSearch = () => {
