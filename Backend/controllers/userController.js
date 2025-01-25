@@ -207,7 +207,7 @@ class UserController {
         }
     };
 
-    static getAllProfiles= async (req, res, next) => {
+    static getAllProfiles = async (req, res, next) => {
         try {
             const result = await Profile.find()
 

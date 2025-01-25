@@ -25,6 +25,9 @@ import EditProfilePage from "./Pages/users/EditProfile";
 import Protected from "./Security/Protected";
 import SchoolProtected from "./Security/SchoolProtected";
 import UserList from "./Pages/admin/UserList";
+import JobList from "./Pages/admin/JobList";
+import SchoolList from "./Pages/admin/SchoolList";
+import AdminProtected from "./Security/AdminProtected";
 
 
 function App() {
@@ -67,7 +70,9 @@ function App() {
                     <Route path='/school-add-job' element={<SchoolProtected><AddJob/></SchoolProtected>}/>
 
                     {/* Admin Routes */}
-                    <Route path='/admin/list' element={<UserList/>}/>
+                    <Route path='/admin/user-list' element={<AdminProtected><UserList/></AdminProtected>}/>
+                    <Route path='/admin/school-list' element={<AdminProtected><SchoolList/></AdminProtected>}/>
+                    <Route path='/admin/job-list' element={<AdminProtected><JobList/></AdminProtected>}/>
 
 
                     <Route path='*' element={<PageNotFound404/>}/>

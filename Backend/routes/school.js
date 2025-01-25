@@ -18,6 +18,7 @@ const updatecheck = [
 const router = express.Router();
 
 router.get('/get/job', schoolController.getJob);
+router.get('/get-all-school', schoolController.getAllSchool);
 router.get('/get/applied-candidate', schoolController.getappliedcandidate);
 router.post('/register', emailAndPasswordValidation, validate, schoolController.register);
 router.post('/update/:id', updatecheck, schoolController.update);

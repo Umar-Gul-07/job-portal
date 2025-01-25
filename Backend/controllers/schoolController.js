@@ -1,6 +1,7 @@
 import {School} from "../models/schoolModel.js";
 import Job from "../models/jobModel.js";
 import JobApplied from "../models/appliedJob.js";
+import createError from "../utils/error.js";
 
 class schoolController {
     static register = async (req, res) => {
@@ -114,18 +115,20 @@ class schoolController {
             }
 
             await school.save();
-            res.status(200).json({message: "School updated successfully!",  user: {
-                id: school._id,
-                schoolName: school.schoolName,
-                firstName: school.firstName,
-                lastName: school.lastName,
-                email: school.email,
-                phone: school.phone,
-                country:school.country,
-                area:school.area,
-                role:school.role,
-                isHire:school.isHire,
-            },});
+            res.status(200).json({
+                message: "School updated successfully!", user: {
+                    id: school._id,
+                    schoolName: school.schoolName,
+                    firstName: school.firstName,
+                    lastName: school.lastName,
+                    email: school.email,
+                    phone: school.phone,
+                    country: school.country,
+                    area: school.area,
+                    role: school.role,
+                    isHire: school.isHire,
+                },
+            });
         } catch (error) {
             res.status(500).json({error: "Server error"});
         }
@@ -144,6 +147,21 @@ class schoolController {
             res.status(500).json({message: "Internal server error", error: error.message});
         }
     };
+
+    static getAllSchool = async (req, res, next) => {
+        try {
+            const result = await School.find()
+
+            if (!result || result.length === 0) {
+                return res.status(404).json({message: "Sorry, no school is available."});
+            }
+            res.status(200).json(result);
+        } catch (err) {
+            console.error('Error in getAllSchool:', err); // Log errors
+            next(createError(500, 'Internal Server Error'));
+        }
+    };
+
 
     static getappliedcandidate = async (req, res) => {
         try {

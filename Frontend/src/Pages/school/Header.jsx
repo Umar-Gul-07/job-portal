@@ -4,10 +4,11 @@ import {LogOut} from "lucide-react";
 import {Link, useNavigate} from "react-router-dom";
 import React, {useContext} from "react";
 import {Store} from "Utils/Store"
+
 const Header = () => {
-    const {dispatch}  = useContext(Store)
+    const {dispatch} = useContext(Store)
     const navigate = useNavigate()
-        const handleLogout = () => {
+    const handleLogout = () => {
         dispatch({type: "ClearUserInfo"});
         localStorage.removeItem("UserInfo");
         navigate("/")
@@ -39,7 +40,7 @@ const Header = () => {
                     {/*<Button variant="ghost">Profile</Button>*/}
                     {/*</Link>*/}
                     <Link to="/school-settings">
-                    <Button variant="ghost">Settings</Button>
+                        <Button variant="ghost">Settings</Button>
                     </Link>
                 </nav>
                 <Button onClick={handleLogout}
