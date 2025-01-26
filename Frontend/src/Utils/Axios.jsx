@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-// const authToken = 'your_auth_token'; 
+// Determine the base URL based on the environment
+const baseURL = process.env.NODE_ENV === 'production'
+  ? 'http://localhost:800/api/'  // Production base URL
+  : 'http://localhost:800';     // Development base URL
 
 // Create a new instance of Axios
 const api = axios.create({
-  baseURL: 'http://localhost:800', // Replace this with your actual API base URL
-  timeout: 5000, // Set the request timeout if needed
+  baseURL: baseURL, // Use the dynamic baseURL
+  timeout: 5000,    // Set the request timeout if needed
   headers: {
     'Content-Type': 'application/json',
     // 'Authorization': `Bearer ${authToken}`,
