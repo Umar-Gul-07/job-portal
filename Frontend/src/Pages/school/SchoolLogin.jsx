@@ -25,10 +25,14 @@ export default function SchoolLogin() {
         try {
             // Send login request to backend
             const response = await api.post('/auth/school/login', formData)
-            toast.success("User Logged In")
+            toast.success("User Logged In");
             const user = response.data.user;
             dispatch({type: "UserLoggedIn", payload: user});
-            navigate("/school-jobs")
+            if (user.isAdmin) {
+                navigate("/admin/dashboard");
+            } else {
+                navigate("/school-jobs");
+            }
         } catch (error) {
             // Handle errors such as incorrect credentials
             if (error.response && error.response.data) {
@@ -101,7 +105,7 @@ export default function SchoolLogin() {
                             type="submit"
                             className="w-full bg-[#2b8200] hover:bg-green-700 text-white py-2 rounded-md"
                         >
-                                                   <strong>Login</strong>
+                            <strong>Login</strong>
                         </Button>
 
                         <div className="text-center text-gray-500">Or</div>

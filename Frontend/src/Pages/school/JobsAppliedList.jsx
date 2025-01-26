@@ -1,19 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Header from "./Header";
-import { useParams } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import api from "../../Utils/Axios";
 import { Store } from "../../Utils/Store";
 
 function ProfileCard({
+    id,
     name = "Anne Hathaway",
     imageUrl = "/placeholder.svg",
-    availability = "Yes",
+    availability = { availableDays: [] },
     dateFrom = "24/11/2024",
     dateTo = "24/12/2024",
     jobsCompleted = 160
 }) {
+    // Extracting availability days from availability object
+    const availableDays = availability?.availableDays?.length > 0
+        ? availability.availableDays.join(", ")
+        : "Not available";
+
     return (
         <div className="flex items-center justify-between py-4 px-6 rounded-lg drop-shadow-sm bg-white w-full">
+            <Link to={`/school-user-profile/${id}`}>
             <div className="flex items-start gap-4">
                 <img
                     src={imageUrl}
@@ -25,7 +32,7 @@ function ProfileCard({
                     <div className="space-y-0.5 text-sm">
                         <div className="flex items-center gap-1">
                             <span className="text-gray-500">Availability:</span>
-                            <span className="text-gray-700">{availability}</span>
+                            <span className="text-gray-700">{availableDays}</span>
                         </div>
                         <div className="flex items-center gap-1">
                             <span className="text-gray-500">Date Available from:</span>
@@ -42,6 +49,7 @@ function ProfileCard({
                     </div>
                 </div>
             </div>
+            </Link>
             <button
                 className="px-16 py-3 bg-[#2B8200] hover:bg-[#2B7A0B] text-white text-sm font-medium rounded-md transition-colors">
                 Select
@@ -86,14 +94,10 @@ export default function JobsAppliedList() {
     // Filter `appliedCandidate` to include only those for the current job
     const candidatesForJob = appliedCandidate.filter(candidate => candidate.job === jobId);
 
-    console.log("Filtered Candidates for Job:", candidatesForJob);
-
-    // Filter `userProfiles` based on filtered `candidatesForJob`
+    // Get profiles for candidates who applied for the job
     const filteredProfiles = userProfiles.filter(profile =>
-        candidatesForJob.some(candidate => candidate.user === profile._id)
+        candidatesForJob.some(candidate => candidate.user === profile.user)
     );
-
-    console.log("Filtered User Profiles:", filteredProfiles);
 
     return (
         <>
@@ -103,7 +107,16 @@ export default function JobsAppliedList() {
                     <div className="space-y-7">
                         {filteredProfiles.length > 0 ? (
                             filteredProfiles.map((profile, index) => (
-                                <ProfileCard key={index} {...profile} />
+                                <ProfileCard
+                                    key={index}
+                                    name={profile.name || "Unknown"}
+                                    imageUrl={`http://localhost:800${profile.profilePicture}`}
+                                    availability={profile.availability}
+                                    dateFrom="24/11/2024"
+                                    dateTo="24/12/2024"
+                                    jobsCompleted={profile.jobsCompleted || 0}
+                                    id={profile.user}
+                                />
                             ))
                         ) : (
                             <div className="flex items-center justify-center min-h-screen bg-white">

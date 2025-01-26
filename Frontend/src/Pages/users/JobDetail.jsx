@@ -16,7 +16,6 @@ const JobDetail = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
-    console.log(job)
     if (loading) {
         return <p>Loading job details...</p>;
     }

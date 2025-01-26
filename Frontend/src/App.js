@@ -28,6 +28,8 @@ import UserList from "./Pages/admin/UserList";
 import JobList from "./Pages/admin/JobList";
 import SchoolList from "./Pages/admin/SchoolList";
 import AdminProtected from "./Security/AdminProtected";
+import SchoolChat from "./Pages/school/SchoolChat";
+import UserProfile from "./Pages/school/UserProfile";
 
 
 function App() {
@@ -68,6 +70,8 @@ function App() {
                     <Route path='/school-jobs-applied/:jobId'
                            element={<SchoolProtected><JobsAppliedList/></SchoolProtected>}/>
                     <Route path='/school-add-job' element={<SchoolProtected><AddJob/></SchoolProtected>}/>
+                    <Route path='/school-chat' element={<SchoolProtected><SchoolChat/></SchoolProtected>}/>
+                    <Route path='/school-user-profile/:id' element={<SchoolProtected><UserProfile/></SchoolProtected>}/>
 
                     {/* Admin Routes */}
                     <Route path='/admin/user-list' element={<AdminProtected><UserList/></AdminProtected>}/>
