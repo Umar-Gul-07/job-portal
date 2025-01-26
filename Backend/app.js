@@ -7,8 +7,8 @@ import authentication from './routes/authentication.js';
 import payment from './routes/payment.js';
 import cors from 'cors';
 import Rating from './routes/rating.js';
-import { Server } from 'socket.io';
-import { createServer } from "http";
+import {Server} from 'socket.io';
+import {createServer} from "http";
 import massageRoute from './routes/massages.js';
 
 dotenv.config();
@@ -18,7 +18,7 @@ const port = process.env.PORT || '800';
 // DB Connection
 const connect = async () => {
     try {
-        await mongoose.connect(process.env.db2, { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(process.env.db2, {useNewUrlParser: true, useUnifiedTopology: true});
         console.log('MongoDB has connected successfully');
     } catch (error) {
         console.error("Failed to connect to MongoDB:", error);
