@@ -1,77 +1,105 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import userModel from "../models/userModel.js";
+import adminModel from "../models/adminModel.js";
 import {School} from "../models/schoolModel.js";
 const login = async (req, res, next) => {
     const { email, password } = req.body;
 
     try {
+        // First, check in adminModel to see if the user is an admin
+        const existingAdmin = await adminModel.findOne({ email });
+
+        if (existingAdmin) {
+            // If admin is found, check if the password is valid
+            const isPasswordValid = await bcrypt.compare(password, existingAdmin.password);
+
+            if (!isPasswordValid) {
+                return res.status(400).json({ message: "Invalid password" });
+            }
+
+            // Generate token for admin
+            const token = generateToken(existingAdmin);
+
+            return res.status(200).json({
+                message: "Admin login successful",
+                user: {
+                    id: existingAdmin._id,
+                    firstName: existingAdmin.firstName,
+                    lastName: existingAdmin.lastName,
+                    email: existingAdmin.email,
+                    phone: existingAdmin.phone,
+                    isAdmin: existingAdmin.isAdmin, // Admin flag
+                },
+                token: token
+            });
+        }
+
+        // If not admin, check in userModel for regular user
         const existingUser = await userModel.findOne({ email });
 
-        if (!existingUser) {
-            return res.status(400).json({ message: "User not found" });
+        if (existingUser) {
+            const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+
+            if (!isPasswordValid) {
+                return res.status(400).json({ message: "Invalid password" });
+            }
+
+            const token = generateToken(existingUser);
+
+            return res.status(200).json({
+                message: "User login successful",
+                user: {
+                    id: existingUser._id,
+                    firstName: existingUser.firstName,
+                    lastName: existingUser.lastName,
+                    email: existingUser.email,
+                    phone: existingUser.phone,
+                    isUser: existingUser.isUser, // User flag
+                },
+                token: token
+            });
         }
-        console.log(existingUser)
 
-        const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+        // If not found in userModel, check if it's a school
+        const existingSchool = await School.findOne({ email });
 
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: "Invalid password" });
+        if (existingSchool) {
+            const isPasswordValid = await bcrypt.compare(password, existingSchool.password);
+
+            if (!isPasswordValid) {
+                return res.status(400).json({ message: "Invalid password" });
+            }
+
+            const token = generateToken(existingSchool);
+
+            return res.status(200).json({
+                message: "School login successful",
+                user: {
+                    id: existingSchool._id,
+                    schoolName: existingSchool.schoolName,
+                    firstName: existingSchool.firstName,
+                    lastName: existingSchool.lastName,
+                    email: existingSchool.email,
+                    phone: existingSchool.phone,
+                    country: existingSchool.country,
+                    area: existingSchool.area,
+                    role: existingSchool.role,
+                    isHire: existingSchool.isHire
+                },
+                token: token
+            });
         }
 
-        const token = generateToken(existingUser);
+        // If no user is found, return an error
+        return res.status(400).json({ message: "User not found" });
 
-        res.status(200).json({
-            message: "Login successful",
-            user: {
-                id: existingUser._id,
-                firstName: existingUser.firstName,
-                lastName: existingUser.lastName,
-                email: existingUser.email,
-                phone: existingUser.phone,
-            },
-            token: token
-        });
     } catch (error) {
         // Handle errors
         res.status(500).json({ message: error.message });
     }
 };
 
-const schoollogin = async (req, res, next) => {
-    const { email, password } = req.body;
-
-    try {
-        const existingUser = await School.findOne({ email });
-
-        if (!existingUser) {
-            return res.status(400).json({ message: "User not found" });
-        }
-
-        const isPasswordValid = await bcrypt.compare(password, existingUser.password);
-
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: "Invalid password" });
-        }
-
-        const token = generateToken(existingUser);
-
-        res.status(200).json({
-            message: "Login successful",
-            user: {
-                id: existingUser._id,
-                firstName: existingUser.firstName,
-                lastName: existingUser.lastName,
-                email: existingUser.email,
-                phone: existingUser.phone,
-            },
-            token: token
-        });
-    } catch (error) {
-        // Handle errors
-        res.status(500).json({ message: error.message });
-    }
-};
 
 // Example of a function to generate a JWT token
 
@@ -88,4 +116,4 @@ const generateToken = (user) => {
     );
 };
 
-export {login,schoollogin}
+export {login}

@@ -9,7 +9,15 @@ function Header() {
     return (
         <nav className="bg-white py-4 px-6 flex items-center justify-between">
             {/* Logo */}
-            <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+            <div className="w-12 h-12 bg-gray-200 rounded-full">
+                <img
+                    src="/logo.jpg"
+                    alt="Parkhouse English School"
+                    width={64}
+                    height={64}
+                    className="h-full w-full rounded-full object-cover"
+                />
+            </div>
 
             {/* Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
@@ -41,14 +49,19 @@ function Header() {
                     <strong>Pricing</strong>
                 </ScrollLink>
             </div>
-            {UserInfo ?
+            {UserInfo && UserInfo.isUser ?
                 <Link to="/user/job-listing">
                     <button
                         className="bg-[#ffcc00] text-white px-6 py-2 rounded-md hover:bg-[#ffcc00] transition-colors">
                         <strong>Dashboard</strong>
                     </button>
                 </Link>
-                : <Link to="/login-choice">
+                : UserInfo && UserInfo.isHire ? <Link to="/school-jobs">
+                    <button
+                        className="bg-[#ffcc00] text-white px-6 py-2 rounded-md hover:bg-[#ffcc00] transition-colors">
+                        <strong>Dashboard</strong>
+                    </button>
+                </Link> : <Link to="/login-choice">
                     <button
                         className="bg-[#2B7A0B] text-white px-6 py-2 rounded-md hover:bg-[#236508] transition-colors">
                         <strong>Login</strong>

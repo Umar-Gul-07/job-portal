@@ -1,22 +1,34 @@
-import React, {useContext, useState} from 'react'
-import {Eye, EyeOff} from 'lucide-react'
-import {Button} from "../components/ui/button"
-import {Input} from "../components/ui/input"
-import {Card, CardContent} from "../components/ui/card"
-import {Link, useNavigate} from "react-router-dom"
+import React, { useContext, useState, useEffect } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
+import { Button } from "../components/ui/button"
+import { Input } from "../components/ui/input"
+import { Card, CardContent } from "../components/ui/card"
+import { Link, useNavigate } from "react-router-dom"
 import api from "../Utils/Axios";
-import {Store} from "../Utils/Store"
-import {toast} from "react-toastify";
+import { Store } from "../Utils/Store"
+import { toast } from "react-toastify";
 
 export default function Login() {
-    const {dispatch} = useContext(Store);
-    const navigate = useNavigate()
-    const [showPassword, setShowPassword] = useState(false)
+    const { state, dispatch } = useContext(Store);
+    const { UserInfo } = state;
+    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: ''
-    })
-    const [errorMessage, setErrorMessage] = useState('')  // State for handling error messages
+    });
+    const [errorMessage, setErrorMessage] = useState('');  // State for handling error messages
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (UserInfo) {
+            if (UserInfo.isAdmin) {
+                navigate("/admin/dashboard");
+            } else if (UserInfo.isUser) {
+                navigate("/user/job-listing");
+            }
+        }
+    }, [UserInfo, navigate]);  // Add UserInfo and navigate as dependencies to the useEffect
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -24,11 +36,23 @@ export default function Login() {
 
         try {
             // Send login request to backend
-            const response = await api.post('/auth/login', formData)
-            toast.success("User Logged In")
+            const response = await api.post('/auth/login', formData);
+            toast.success("User Logged In");
+
             const user = response.data.user;
-            dispatch({type: "UserLoggedIn", payload: user});
-            navigate("/user/job-listing")
+            dispatch({ type: "UserLoggedIn", payload: user });
+
+            // Check if the user is admin or regular user
+            if (user.isAdmin) {
+                navigate("/admin/dashboard");
+            } else if (user.isUser) {
+                navigate("/user/job-listing");
+            } else {
+                // If neither, you can set a default redirect or handle it differently
+                toast.error("Unknown role or no role assigned.");
+                // Optionally, you can redirect to an error page or login page again.
+                navigate("/login");
+            }
         } catch (error) {
             // Handle errors such as incorrect credentials
             if (error.response && error.response.data) {
@@ -37,16 +61,16 @@ export default function Login() {
                 setErrorMessage('An error occurred. Please try again.')
             }
         }
-    }
+    };
 
     // Handle form input change
     const handleInputChange = (e) => {
-        const {name, value} = e.target
+        const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: value
-        }))
-    }
+        }));
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white p-4">
@@ -92,7 +116,7 @@ export default function Login() {
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                                 >
-                                    {showPassword ? <EyeOff className="w-5 h-5"/> : <Eye className="w-5 h-5"/>}
+                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
                             </div>
                         </div>
@@ -101,7 +125,7 @@ export default function Login() {
                             type="submit"
                             className="w-full bg-[#2b8200] hover:bg-green-700 text-white py-2 rounded-md"
                         >
-                                                   <strong>Login</strong>
+                            <strong>Login</strong>
                         </Button>
 
                         <div className="text-center text-gray-500">Or</div>
@@ -133,5 +157,5 @@ export default function Login() {
                 </CardContent>
             </Card>
         </div>
-    )
+    );
 }
