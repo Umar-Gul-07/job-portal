@@ -7,6 +7,7 @@ import {Helmet} from "react-helmet";
 import {Store} from "Utils/Store";
 import Header from "./Header";
 import {useNavigate} from "react-router-dom";
+import {server_ip} from "../../Utils/Data";
 
 export default function EditProfilePage() {
     const {state} = useContext(Store);
@@ -120,7 +121,7 @@ export default function EditProfilePage() {
                         />
                         {previewImage && (
                             <img
-                                src={`http://localhost:800${previewImage}`}
+                                src={`${server_ip}${previewImage}`}
                                 alt="Profile Preview"
                                 className="mt-2 w-24 h-24 object-cover rounded-full"
                             />

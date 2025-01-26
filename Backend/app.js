@@ -9,7 +9,7 @@ import cors from 'cors';
 import Rating from './routes/rating.js';
 import { Server } from 'socket.io';
 import { createServer } from "http";
-import massageRoute from './routes/massages.js'
+import massageRoute from './routes/massages.js';
 
 dotenv.config();
 const app = express();
@@ -27,7 +27,16 @@ const connect = async () => {
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+
+// CORS configuration
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production'
+        ? 'http://54.175.124.76' // Allow requests from your frontend production domain
+        : 'http://localhost:3000', // Allow requests from your local frontend during development
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+};
+
+app.use(cors(corsOptions)); // Use the configured CORS options
 app.use('/uploads', express.static('uploads'));
 
 // Routes
@@ -36,7 +45,7 @@ app.use('/school', school);
 app.use('/payments', payment);
 app.use('/auth', authentication);
 app.use('/rating', Rating);
-app.use('/messages', massageRoute)
+app.use('/messages', massageRoute);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
@@ -54,7 +63,9 @@ app.use((err, req, res, next) => {
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.NODE_ENV === 'production'
+            ? 'http://54.175.124.76' // Frontend production domain
+            : 'http://localhost:3000', // Frontend local domain
         credentials: true,
     },
 });

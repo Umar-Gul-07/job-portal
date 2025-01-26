@@ -6,6 +6,7 @@ import Header from "./Header";
 import { Link } from "react-router-dom";
 import api from "../../Utils/Axios";
 import {Store} from "../../Utils/Store"
+import {server_ip} from "../../Utils/Data";
 export default function Profile() {
     const [profile, setProfile] = useState(null); // State to store profile data
     const [loading, setLoading] = useState(true); // Loading state
@@ -60,7 +61,7 @@ export default function Profile() {
                             <div className="flex flex-col items-start">
                                 <div className="relative w-fit">
                                     <img
-                                        src={`http://localhost:800${profile.profilePicture}` || "https://via.placeholder.com/150"}
+                                        src={`${server_ip}${profile.profilePicture}` || "https://via.placeholder.com/150"}
                                         alt={profile.user?.name || "Profile Picture"}
                                         className="w-20 h-20 rounded-full object-cover"
                                     />
