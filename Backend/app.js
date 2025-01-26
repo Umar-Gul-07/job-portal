@@ -13,7 +13,7 @@ import massageRoute from './routes/massages.js';
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || '800';
+const port = process.env.PORT || '8000';
 
 // DB Connection
 const connect = async () => {
