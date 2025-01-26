@@ -7,8 +7,8 @@ import authentication from './routes/authentication.js';
 import payment from './routes/payment.js';
 import cors from 'cors';
 import Rating from './routes/rating.js';
-import { Server } from 'socket.io';
-import { createServer } from "http";
+import {Server} from 'socket.io';
+import {createServer} from "http";
 import massageRoute from './routes/massages.js';
 
 dotenv.config();
@@ -18,7 +18,7 @@ const port = process.env.PORT || '8000';
 // DB Connection
 const connect = async () => {
     try {
-        await mongoose.connect(process.env.db2, { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(process.env.db2, {useNewUrlParser: true, useUnifiedTopology: true});
         console.log('MongoDB has connected successfully');
     } catch (error) {
         console.error("Failed to connect to MongoDB:", error);
@@ -30,11 +30,13 @@ app.use(express.json());
 
 // CORS configuration
 const corsOptions = {
-    origin: process.env.NODE_ENV === 'production'
-        ? 'http://54.175.124.76' // Allow requests from your frontend production domain
-        : 'http://localhost:3000', // Allow requests from your local frontend during development
+    origin: [
+        'http://54.175.124.76',  // Allow requests from your frontend production domain
+        'http://localhost:3000'   // Allow requests from your local frontend during development
+    ],
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 };
+
 
 app.use(cors(corsOptions)); // Use the configured CORS options
 app.use('/uploads', express.static('uploads'));
@@ -63,10 +65,11 @@ app.use((err, req, res, next) => {
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.NODE_ENV === 'production'
-            ? 'http://54.175.124.76' // Frontend production domain
-            : 'http://localhost:3000', // Frontend local domain
-        credentials: true,
+        origin: [
+            'http://54.175.124.76',  // Allow requests from your frontend production domain
+            'http://localhost:3000'   // Allow requests from your local frontend during development
+        ],
+        credentials: true, // Allow credentials (cookies, authorization headers, etc.)
     },
 });
 
